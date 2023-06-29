@@ -11,8 +11,9 @@ product = None
 
 # %%
 # Load data and make separate dfs for ligand and protein features
-data = pd.read_csv(str(upstream["clean"]["data"]), index_col=0)
-data = data[["Canon_SMILES", "Protein", "Murcko_SMILES", "Class"]]
+# Possible Morgan fingerprint duplicates already removed here
+data = pd.read_csv(str(upstream["clean"]["data_no_dups"]), index_col=0)
+data = data[["Canon_SMILES", "Protein", "Class"]]
 
 # %%
 # Initialise the ligand featurizer
@@ -28,7 +29,6 @@ pcm_data = AddFeatures(
     smiles_col="Canon_SMILES",
     protein_col="Protein",
     class_col="Class",
-    group_col="Murcko_SMILES",
 )
 
 # get protein and ligand features

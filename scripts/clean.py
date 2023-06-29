@@ -1,5 +1,6 @@
 # %% [markdown]
-# This file is for cleaning the data
+# This file is to clean the data, and to write files with and without fingerprint
+# duplicates
 
 # %%
 import numpy as np
@@ -7,6 +8,7 @@ import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem import PandasTools
+from rdkit.DataManip.Metric import GetTanimotoSimMat
 
 # %% tags=["parameters"]
 upstream = None
@@ -65,15 +67,47 @@ print(data_2["Canon_SMILES"].describe())
 print(data_2["Protein"].describe())
 
 # %%
-# Add Murcko SMILES column with PandasTools
-PandasTools.AddMoleculeColumnToFrame(data_2, "Canon_SMILES", "Mol")
-PandasTools.AddMurckoToFrame(data_2, molCol="Mol", MurckoCol="Murcko_SMILES")
-
-# replace empty strings in murcko smiles col with nan, then assign to NoMurcko
-data_2["Murcko_SMILES"] = data_2["Murcko_SMILES"].replace("", np.nan)
-data_2["Murcko_SMILES"] = data_2["Murcko_SMILES"].fillna("NoMurcko")
-data_2.drop(columns=["Mol"], inplace=True)
-
-# %%
 # Save the cleaned data to a csv file (this is prior to removing fingerprint duplicates)
 data_2.to_csv(str(product["data"]))
+
+# %%
+# Now deal with the fingerprint duplicates
+unique_ligands = data_2["Canon_SMILES"].unique()
+n_ligands_all = len(unique_ligands)
+print(f"Number of unique ligands: {n_ligands_all}")
+# sanitize=True by default
+ligand_mols = [Chem.MolFromSmiles(s) for s in unique_ligands]
+
+# %%
+# Now check for Tanimoto similarity 1 (at radius 3, nbits 1024, need chirality on)
+all_morgan_fp_1024 = [
+    AllChem.GetMorganFingerprintAsBitVect(m, 3, nBits=1024, useChirality=True)
+    for m in ligand_mols
+]
+all_tanimoto_sim_1024 = GetTanimotoSimMat(all_morgan_fp_1024)
+
+lig_idx = 0
+index = 0
+dups = []
+
+for i in range(n_ligands_all):
+    for j in range(i):
+        if all_tanimoto_sim_1024[index] == 1:
+            print(f'{index} Corresponds to ligand {lig_idx+1} against ligand {j+1}')
+            dups.append(unique_ligands[i])
+            dups.append(unique_ligands[j])
+        index += 1
+    lig_idx += 1
+
+dups = set(dups)
+
+# %%
+# Get some information about the duplicates, then remove them
+print(f"Number of duplicates: {len(dups)}")
+
+data_no_dups = data_2.loc[~data_2["Canon_SMILES"].isin(dups)]
+print(f"Remaining data points: {data_no_dups.shape[0]}")
+
+# %%
+# Save the data without duplicates to a csv file
+data_no_dups.to_csv(str(product["data_no_dups"]))

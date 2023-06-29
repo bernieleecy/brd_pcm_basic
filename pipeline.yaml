@@ -2,11 +2,28 @@ tasks:
   - source: scripts/clean.py
     name: clean
     product:
-      nb: products/clean.html
-      data: products/cleaned_data.csv
+      nb: products/htmls/clean.html
+      data: products/data/cleaned_data_init.csv
+      data_no_dups: products/data/cleaned_data_no_fp_dups.csv
 
   - source: scripts/featurize.py
     name: featurize
     product:
-      nb: products/featurize.html
-      data: products/featurized_data.parquet
+      nb: products/htmls/featurize.html
+      data: products/data/featurized_data.parquet
+
+  - source: scripts/train.py
+    name: train
+    product:
+      nb: products/htmls/train.html
+      cross_val: products/ml_outputs/cross_val_scores.csv
+      model: products/models/uncal_model.pickle
+      predictions: products/ml_outputs/uncal_test_set_preds.csv
+
+  - source: scripts/analyse_test_set.py
+    name: analyse_test_set
+    product:
+      nb: products/htmls/analyse_test_set.html
+      roc_curve: products/ml_outputs/uncal_test_plots/roc_curve.png
+      pr_curve: products/ml_outputs/uncal_test_plots/pr_curve.png
+      cmat: products/ml_outputs/uncal_test_plots/uncal_cmat.png

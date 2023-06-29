@@ -1,0 +1,12 @@
+tasks:
+  - source: scripts/clean.py
+    name: clean
+    product:
+      nb: products/clean.html
+      data: products/cleaned_data.csv
+
+  - source: scripts/featurize.py
+    name: featurize
+    product:
+      nb: products/featurize.html
+      data: products/featurized_data.parquet

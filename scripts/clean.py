@@ -37,7 +37,7 @@ data = data.drop_duplicates(subset=["Protein", "Canon_SMILES"], keep="first")
 # %%
 # Sort data in the desired order (requires conversion of strings to uppercase first)
 data["Type"] = data["Type"].str.upper()
-data.sort_values(by=["Protein","Class","Type"], ascending=[True,False,False])
+data.sort_values(by=["Protein", "Class", "Type"], ascending=[True, False, False])
 
 # %%
 # Do data preparation and checks (based on https://github.com/vfscalfani/CSN_tutorial)
@@ -57,7 +57,7 @@ data_2 = data_2.drop(columns=["num_frags"])
 
 # %%
 # Remove bromodomains with fewer than 50 entries
-few_points = (data_2["Protein"].value_counts() < 50) # boolean
+few_points = data_2["Protein"].value_counts() < 50  # boolean
 few_points_idx = few_points[few_points].index
 
 data_2 = data_2.loc[~data_2["Protein"].isin(few_points_idx)]
@@ -93,7 +93,7 @@ dups = []
 for i in range(n_ligands_all):
     for j in range(i):
         if all_tanimoto_sim_1024[index] == 1:
-            print(f'{index} Corresponds to ligand {lig_idx+1} against ligand {j+1}')
+            print(f"{index} Corresponds to ligand {lig_idx+1} against ligand {j+1}")
             dups.append(unique_ligands[i])
             dups.append(unique_ligands[j])
         index += 1

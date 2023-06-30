@@ -17,7 +17,8 @@ from pythia.pcm_tools import plot_by_protein_preds
 
 # logging
 import logging
-logging.basicConfig(format='%(message)s')
+
+logging.basicConfig(format="%(message)s")
 log = logging.getLogger()
 log.setLevel(logging.INFO)
 
@@ -27,13 +28,15 @@ plt.style.use("plotstyle.mplstyle")
 sns.set_palette("colorblind")
 
 # %% tags=["parameters"]
-upstream = ["train"]
+upstream = None
 product = None
 
 # %%
 # load data
+# Get the upstream name (assumes single upstream here)
+upstream_name = list(upstream)[0]
 clf_name = "Random Forest"
-pred_df = pd.read_csv(upstream["train"]["predictions"])
+pred_df = pd.read_csv(upstream[upstream_name]["predictions"])
 pred_df.head()
 
 # %%
@@ -69,7 +72,9 @@ fig.savefig(product["pr_curve"], dpi=600)
 # %%
 conf_mat = confusion_matrix(pred_df["Class"], pred_df["Predicted value"], labels=(0, 1))
 fig, ax = plt.subplots(figsize=(5, 4), constrained_layout=True)
-disp = ConfusionMatrixDisplay(confusion_matrix=conf_mat, display_labels=["Inactive", "Active"])
+disp = ConfusionMatrixDisplay(
+    confusion_matrix=conf_mat, display_labels=["Inactive", "Active"]
+)
 disp.plot(cmap="rocket", ax=ax)
 ax.set(xlabel="Predicted class", ylabel="Known class")
 

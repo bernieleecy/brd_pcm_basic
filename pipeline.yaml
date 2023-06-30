@@ -1,29 +1,53 @@
+meta:
+  extract_upstream: false
+
 tasks:
   - source: scripts/clean.py
-    name: clean
     product:
       nb: products/htmls/clean.html
       data: products/data/cleaned_data_init.csv
       data_no_dups: products/data/cleaned_data_no_fp_dups.csv
 
   - source: scripts/featurize.py
-    name: featurize
+    upstream: [clean]
     product:
       nb: products/htmls/featurize.html
       data: products/data/featurized_data.parquet
 
-  - source: scripts/train.py
-    name: train
+  - source: scripts/prep_train.py
+    upstream: [featurize]
     product:
-      nb: products/htmls/train.html
+      nb: products/htmls/prep_train.html
+      X_train: products/data/X_train.parquet
+      y_train: products/data/y_train.parquet
+      X_test: products/data/X_test.parquet
+      y_test: products/data/y_test.parquet
+      imblearn_pipe: products/models/imblearn_pipe_template.pkl
+
+  - source: scripts/cross_validate.py
+    upstream: [prep_train]
+    product:
+      nb: products/htmls/cross_validate.html
       cross_val: products/ml_outputs/cross_val_scores.csv
-      model: products/models/uncal_model.pickle
+
+  - source: scripts/uncal_train.py
+    upstream: [prep_train]
+    product:
+      nb: products/htmls/train_uncal.html
+      model: products/models/uncal_model.pkl
       predictions: products/ml_outputs/uncal_test_set_preds.csv
 
-  - source: scripts/analyse_test_set.py
-    name: analyse_test_set
+  - source: scripts/cal_train.py
+    upstream: [prep_train]
     product:
-      nb: products/htmls/analyse_test_set.html
+      nb: products/htmls/train_cal.html
+      predictions: products/ml_outputs/VAcal_test_set_preds.csv
+
+  - source: scripts/analyse_test_set.py
+    name: analyse_test_set_uncal
+    upstream: [uncal_train]
+    product:
+      nb: products/htmls/analyse_test_set_uncal.html
       roc_curve: products/ml_outputs/uncal_test_plots/roc_curve.png
       pr_curve: products/ml_outputs/uncal_test_plots/pr_curve.png
       cmat: products/ml_outputs/uncal_test_plots/uncal_cmat.png

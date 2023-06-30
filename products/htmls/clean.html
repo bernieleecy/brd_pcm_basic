@@ -14733,8 +14733,8 @@ duplicates</p>
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre>[14:53:28] WARNING: not removing hydrogen atom without neighbors
-[14:53:28] WARNING: not removing hydrogen atom without neighbors
+<pre>[14:40:41] WARNING: not removing hydrogen atom without neighbors
+[14:40:42] WARNING: not removing hydrogen atom without neighbors
 </pre>
 </div>
 </div>
@@ -14753,7 +14753,7 @@ duplicates</p>
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Sort data in the desired order (requires conversion of strings to uppercase first)</span>
 <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-<span class="n">data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Protein&quot;</span><span class="p">,</span><span class="s2">&quot;Class&quot;</span><span class="p">,</span><span class="s2">&quot;Type&quot;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">False</span><span class="p">])</span>
+<span class="n">data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Protein&quot;</span><span class="p">,</span> <span class="s2">&quot;Class&quot;</span><span class="p">,</span> <span class="s2">&quot;Type&quot;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
 </pre></div>
 
      </div>
@@ -15024,7 +15024,7 @@ duplicates</p>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Remove bromodomains with fewer than 50 entries</span>
-<span class="n">few_points</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_2</span><span class="p">[</span><span class="s2">&quot;Protein&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">)</span> <span class="c1"># boolean</span>
+<span class="n">few_points</span> <span class="o">=</span> <span class="n">data_2</span><span class="p">[</span><span class="s2">&quot;Protein&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">50</span>  <span class="c1"># boolean</span>
 <span class="n">few_points_idx</span> <span class="o">=</span> <span class="n">few_points</span><span class="p">[</span><span class="n">few_points</span><span class="p">]</span><span class="o">.</span><span class="n">index</span>
 
 <span class="n">data_2</span> <span class="o">=</span> <span class="n">data_2</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">data_2</span><span class="p">[</span><span class="s2">&quot;Protein&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">few_points_idx</span><span class="p">)]</span>
@@ -15151,7 +15151,7 @@ Name: Protein, dtype: object
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_ligands_all</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">all_tanimoto_sim_1024</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s1"> Corresponds to ligand </span><span class="si">{</span><span class="n">lig_idx</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1"> against ligand </span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2"> Corresponds to ligand </span><span class="si">{</span><span class="n">lig_idx</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> against ligand </span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">dups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">unique_ligands</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
             <span class="n">dups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">unique_ligands</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
         <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>

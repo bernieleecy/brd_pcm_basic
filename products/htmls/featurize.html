@@ -14627,7 +14627,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">upstream</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;clean&quot;</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">upstream</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="n">product</span> <span class="o">=</span> <span class="kc">None</span>
 </pre></div>
 
@@ -14671,9 +14671,11 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Load data and make separate dfs for ligand and protein features</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Get the upstream name (assumes single upstream here)</span>
+<span class="n">upstream_name</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">upstream</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1"># Load data and make separate dfs for ligand and protein features</span>
 <span class="c1"># Possible Morgan fingerprint duplicates already removed here</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">upstream</span><span class="p">[</span><span class="s2">&quot;clean&quot;</span><span class="p">][</span><span class="s2">&quot;data_no_dups&quot;</span><span class="p">]),</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">upstream</span><span class="p">[</span><span class="n">upstream_name</span><span class="p">][</span><span class="s2">&quot;data_no_dups&quot;</span><span class="p">]),</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s2">&quot;Canon_SMILES&quot;</span><span class="p">,</span> <span class="s2">&quot;Protein&quot;</span><span class="p">,</span> <span class="s2">&quot;Class&quot;</span><span class="p">]]</span>
 </pre></div>
 
@@ -14720,7 +14722,9 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 
 <span class="c1"># get protein and ligand features</span>
 <span class="n">pcm_data</span><span class="o">.</span><span class="n">get_protein_features</span><span class="p">(</span><span class="n">protein_file</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">protein_descriptor</span><span class="p">)</span>
-<span class="n">pcm_data</span><span class="o">.</span><span class="n">get_ligand_features_molfeat</span><span class="p">(</span><span class="n">ligand_descriptor</span><span class="p">,</span> <span class="n">feature_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">ligand_params</span><span class="p">)</span>
+<span class="n">pcm_data</span><span class="o">.</span><span class="n">get_ligand_features_molfeat</span><span class="p">(</span>
+    <span class="n">ligand_descriptor</span><span class="p">,</span> <span class="n">feature_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">ligand_params</span>
+<span class="p">)</span>
 
 <span class="c1"># retain all information as this will be needed to do train-test splits!</span>
 <span class="n">pcm_data</span><span class="o">.</span><span class="n">combine_feats</span><span class="p">(</span><span class="n">file_out</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>

@@ -6,13 +6,15 @@ import pandas as pd
 from pythia.pcm_tools import AddFeatures
 
 # %% tags=["parameters"]
-upstream = ["clean"]
+upstream = None
 product = None
 
 # %%
+# Get the upstream name (assumes single upstream here)
+upstream_name = list(upstream)[0]
 # Load data and make separate dfs for ligand and protein features
 # Possible Morgan fingerprint duplicates already removed here
-data = pd.read_csv(str(upstream["clean"]["data_no_dups"]), index_col=0)
+data = pd.read_csv(str(upstream[upstream_name]["data_no_dups"]), index_col=0)
 data = data[["Canon_SMILES", "Protein", "Class"]]
 
 # %%
@@ -33,7 +35,9 @@ pcm_data = AddFeatures(
 
 # get protein and ligand features
 pcm_data.get_protein_features(protein_file, name=protein_descriptor)
-pcm_data.get_ligand_features_molfeat(ligand_descriptor, feature_path=None, **ligand_params)
+pcm_data.get_ligand_features_molfeat(
+    ligand_descriptor, feature_path=None, **ligand_params
+)
 
 # retain all information as this will be needed to do train-test splits!
 pcm_data.combine_feats(file_out=False, drop=False)

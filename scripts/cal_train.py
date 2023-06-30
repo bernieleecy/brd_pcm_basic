@@ -3,6 +3,7 @@
 
 # %%
 import pickle
+import os
 import numpy as np
 import pandas as pd
 
@@ -76,6 +77,9 @@ for i, (train, test) in enumerate(cv_indices):
 # run CVAP, need to implement a way to store models
 # note that the y_test index MUST be from 0 to len(y_test) - 1, otherwise the Venn-ABERS
 # code doesn't work
+if not os.path.exists(str(product["model"])):
+    os.makedirs(str(product["model"]))
+
 va_df = run_CVAP(
     X_train=X_train,
     y_train=y_train,
@@ -87,11 +91,26 @@ va_df = run_CVAP(
     rfe_cv=False,
     threshold=0.5,
     outdir=None,
+    save_clf=True,
+    clf_outdir=str(product["model"]),
 )
 
 # %%
 va_df.head()
 
 # %%
+# save predictions
+# make it more similar to the uncal_train.py output in terms of column names
+pred_df = pd.read_parquet(
+    str(upstream[upstream_name]["X_test"]),
+    columns=["Canon_SMILES", "Protein", "Murcko_SMILES"],
+)
+
+pred_df = pd.concat([pred_df, va_df], axis=1)
+pred_df = pred_df.rename(
+    columns={"True value": "Class", "avg_single_prob": "P (class 1)"}
+)
+
+# %%
 # save the dataframe
-va_df.to_csv(product["predictions"], index=False)
+pred_df.to_csv(product["predictions"], index=False)

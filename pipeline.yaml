@@ -41,6 +41,7 @@ tasks:
     upstream: [prep_train]
     product:
       nb: products/htmls/train_cal.html
+      model: products/models/cal_models
       predictions: products/ml_outputs/VAcal_test_set_preds.csv
 
   - source: scripts/analyse_test_set.py
@@ -51,3 +52,20 @@ tasks:
       roc_curve: products/ml_outputs/uncal_test_plots/roc_curve.png
       pr_curve: products/ml_outputs/uncal_test_plots/pr_curve.png
       cmat: products/ml_outputs/uncal_test_plots/uncal_cmat.png
+      conf_metrics: products/ml_outputs/uncal_test_cmetrics.csv
+      cal_curve: products/ml_outputs/uncal_test_plots/calibration_curve.png
+      indiv_prot_csv: products/ml_outputs/uncal_test_by_protein.csv
+      indiv_prot_plot: products/ml_outputs/uncal_test_plots/pred_by_proteins_all.png
+
+  - source: scripts/analyse_test_set.py
+    name: analyse_test_set_cal
+    upstream: [cal_train]
+    product:
+      nb: products/htmls/analyse_test_set_cal.html
+      roc_curve: products/ml_outputs/cal_test_plots/roc_curve.png
+      pr_curve: products/ml_outputs/cal_test_plots/pr_curve.png
+      cmat: products/ml_outputs/cal_test_plots/uncal_cmat.png
+      conf_metrics: products/ml_outputs/cal_test_cmetrics.csv
+      cal_curve: products/ml_outputs/cal_test_plots/calibration_curve.png
+      indiv_prot_csv: products/ml_outputs/cal_test_by_protein.csv
+      indiv_prot_plot: products/ml_outputs/cal_test_plots/pred_by_proteins_all.png

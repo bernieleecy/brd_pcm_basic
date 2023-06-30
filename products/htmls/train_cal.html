@@ -14611,6 +14611,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
@@ -14705,6 +14706,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <span class="p">}</span>
 <span class="n">product</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;nb&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/htmls/train_cal.html&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/models/cal_models&quot;</span><span class="p">,</span>
     <span class="s2">&quot;predictions&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/ml_outputs/VAcal_test_set_preds.csv&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
@@ -14866,6 +14868,9 @@ Fold 9: 7486 train molecules, 938 test molecules
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># run CVAP, need to implement a way to store models</span>
 <span class="c1"># note that the y_test index MUST be from 0 to len(y_test) - 1, otherwise the Venn-ABERS</span>
 <span class="c1"># code doesn&#39;t work</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">product</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">])):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">product</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]))</span>
+
 <span class="n">va_df</span> <span class="o">=</span> <span class="n">run_CVAP</span><span class="p">(</span>
     <span class="n">X_train</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span>
     <span class="n">y_train</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
@@ -14877,6 +14882,8 @@ Fold 9: 7486 train molecules, 938 test molecules
     <span class="n">rfe_cv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">outdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">save_clf</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">clf_outdir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">product</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]),</span>
 <span class="p">)</span>
 </pre></div>
 
@@ -14918,23 +14925,23 @@ Fold 9: 7486 train molecules, 938 test molecules
 [Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
 [Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
 [Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
+[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.4s
+[Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
+[Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
+[Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
+[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.4s
+[Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
+[Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
+[Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
+[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.4s
+[Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
+[Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
+[Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
 [Pipeline] .......... (step 2 of 4) Processing resample, total=   1.3s
 [Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
 [Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
 [Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
-[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.4s
-[Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
-[Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
-[Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
-[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.4s
-[Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
-[Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
-[Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
 [Pipeline] .......... (step 2 of 4) Processing resample, total=   1.3s
-[Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
-[Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
-[Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
-[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.4s
 [Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
 [Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
 </pre>
@@ -15065,8 +15072,34 @@ Fold 9: 7486 train molecules, 938 test molecules
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># save predictions</span>
+<span class="c1"># make it more similar to the uncal_train.py output in terms of column names</span>
+<span class="n">pred_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span>
+    <span class="nb">str</span><span class="p">(</span><span class="n">upstream</span><span class="p">[</span><span class="n">upstream_name</span><span class="p">][</span><span class="s2">&quot;X_test&quot;</span><span class="p">]),</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Canon_SMILES&quot;</span><span class="p">,</span> <span class="s2">&quot;Protein&quot;</span><span class="p">,</span> <span class="s2">&quot;Murcko_SMILES&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="n">pred_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">pred_df</span><span class="p">,</span> <span class="n">va_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pred_df</span> <span class="o">=</span> <span class="n">pred_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;True value&quot;</span><span class="p">:</span> <span class="s2">&quot;Class&quot;</span><span class="p">,</span> <span class="s2">&quot;avg_single_prob&quot;</span><span class="p">:</span> <span class="s2">&quot;P (class 1)&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># save the dataframe</span>
-<span class="n">va_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">product</span><span class="p">[</span><span class="s2">&quot;predictions&quot;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">pred_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">product</span><span class="p">[</span><span class="s2">&quot;predictions&quot;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
      </div>

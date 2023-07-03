@@ -69,10 +69,13 @@ cv = StratifiedGroupKFold(n_splits=10, shuffle=True, random_state=random_seed)
 cv_indices = [(train, test) for train, test in cv.split(X_train, y_train, train_groups)]
 
 # %%
-# check cv indices
+# check cv indices and pickle for later use
 for i, (train, test) in enumerate(cv_indices):
     print(f"Fold {i}: {len(train)} train molecules, {len(test)} test molecules")
     print(train)
+
+with open(product["cv_indices"], "wb") as f:
+    pickle.dump(cv_indices, f)
 
 # %%
 # run CVAP, need to implement a way to store models

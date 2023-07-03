@@ -31,7 +31,8 @@ tasks:
     product:
       nb: "{{root}}/htmls/train_cal.html"
       model: "{{root}}/models/cal_models"
-      predictions: "{{root}}/ml_outputs/VAcal_test_set_preds.csv"
+      predictions: "{{root}}/ml_outputs/cal_test_set_preds.csv"
+      cv_indices: "{{root}}/models/VA_cv_indices.pkl"
 
   - source: scripts/analyze_test_set.py
     name: analyze_test_set_uncal

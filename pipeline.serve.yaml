@@ -11,6 +11,17 @@ tasks:
     params:
       path_to_model: "products/train/models/uncal_model.pkl.bz2"
 
+  - source: scripts/serve_cal.py
+    upstream: [featurize]
+    product:
+      nb: "{{root}}/htmls/serve_cal.html"
+      predictions: "{{root}}/ml_outputs/cal_preds.csv"
+    params:
+      X_train_data: "products/train/data/X_train.parquet"
+      y_train_data: "products/train/data/y_train.parquet"
+      cv_data: "products/train/models/VA_cv_indices.pkl"
+      model_folder: "products/train/models/cal_models"
+
   - source: scripts/analyze_serve.py
     name: analyze_serve_uncal
     upstream: [serve_uncal]
@@ -18,3 +29,11 @@ tasks:
       nb: "{{root}}/htmls/analyze_serve_uncal.html"
       cmat: "{{root}}/ml_outputs/uncal_plots/uncal_cmat.png"
       conf_metrics: "{{root}}/ml_outputs/uncal_cmetrics.csv"
+
+  - source: scripts/analyze_serve.py
+    name: analyze_serve_cal
+    upstream: [serve_cal]
+    product:
+      nb: "{{root}}/htmls/analyze_serve_cal.html"
+      cmat: "{{root}}/ml_outputs/cal_plots/cal_cmat.png"
+      conf_metrics: "{{root}}/ml_outputs/cal_cmetrics.csv"

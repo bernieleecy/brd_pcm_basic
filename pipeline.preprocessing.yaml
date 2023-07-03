@@ -1,0 +1,13 @@
+# this provides the cleaning and featurizing tasks for training and inference
+
+- source: scripts/clean.py
+  product:
+    nb: "{{root}}/htmls/clean.html"
+    data: "{{root}}/data/cleaned_data_init.csv"
+    data_no_dups: "{{root}}/data/cleaned_data_no_fp_dups.csv"
+
+- source: scripts/featurize.py
+  upstream: [clean]
+  product:
+    nb: "{{root}}/htmls/featurize.html"
+    data: "{{root}}/data/featurized_data.parquet"

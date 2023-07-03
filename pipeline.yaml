@@ -1,19 +1,8 @@
 meta:
+  import_tasks_from: pipeline.preprocessing.yaml
   extract_upstream: false
 
 tasks:
-  - source: scripts/clean.py
-    product:
-      nb: "{{root}}/htmls/clean.html"
-      data: "{{root}}/data/cleaned_data_init.csv"
-      data_no_dups: "{{root}}/data/cleaned_data_no_fp_dups.csv"
-
-  - source: scripts/featurize.py
-    upstream: [clean]
-    product:
-      nb: "{{root}}/htmls/featurize.html"
-      data: "{{root}}/data/featurized_data.parquet"
-
   - source: scripts/prep_train.py
     upstream: [featurize]
     product:

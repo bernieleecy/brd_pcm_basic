@@ -14696,18 +14696,18 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Parameters</span>
 <span class="n">upstream</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;prep_train&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;nb&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/htmls/prep_train.html&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;X_train&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/data/X_train.parquet&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;y_train&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/data/y_train.parquet&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;X_test&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/data/X_test.parquet&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;y_test&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/data/y_test.parquet&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;imblearn_pipe&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/models/imblearn_pipe_template.pkl&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nb&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/train/htmls/prep_train.html&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;X_train&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/train/data/X_train.parquet&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;y_train&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/train/data/y_train.parquet&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;X_test&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/train/data/X_test.parquet&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;y_test&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/train/data/y_test.parquet&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;imblearn_pipe&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/train/models/imblearn_pipe_template.pkl&quot;</span><span class="p">,</span>
     <span class="p">}</span>
 <span class="p">}</span>
 <span class="n">product</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;nb&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/htmls/train_cal.html&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/models/cal_models&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;predictions&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/ml_outputs/VAcal_test_set_preds.csv&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nb&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/train/htmls/train_cal.html&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/train/models/cal_models&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;predictions&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/train/ml_outputs/VAcal_test_set_preds.csv&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -14913,6 +14913,14 @@ Fold 9: 7486 train molecules, 938 test molecules
 [Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
 [Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
 [Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
+[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.3s
+[Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
+[Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
+[Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
+[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.3s
+[Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
+[Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
+[Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
 [Pipeline] .......... (step 2 of 4) Processing resample, total=   1.4s
 [Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
 [Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
@@ -14925,15 +14933,7 @@ Fold 9: 7486 train molecules, 938 test molecules
 [Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
 [Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
 [Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
-[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.4s
-[Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
-[Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
-[Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
-[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.4s
-[Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
-[Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
-[Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
-[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.4s
+[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.3s
 [Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
 [Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
 [Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s

@@ -4,68 +4,68 @@ meta:
 tasks:
   - source: scripts/clean.py
     product:
-      nb: products/htmls/clean.html
-      data: products/data/cleaned_data_init.csv
-      data_no_dups: products/data/cleaned_data_no_fp_dups.csv
+      nb: "{{root}}/htmls/clean.html"
+      data: "{{root}}/data/cleaned_data_init.csv"
+      data_no_dups: "{{root}}/data/cleaned_data_no_fp_dups.csv"
 
   - source: scripts/featurize.py
     upstream: [clean]
     product:
-      nb: products/htmls/featurize.html
-      data: products/data/featurized_data.parquet
+      nb: "{{root}}/htmls/featurize.html"
+      data: "{{root}}/data/featurized_data.parquet"
 
   - source: scripts/prep_train.py
     upstream: [featurize]
     product:
-      nb: products/htmls/prep_train.html
-      X_train: products/data/X_train.parquet
-      y_train: products/data/y_train.parquet
-      X_test: products/data/X_test.parquet
-      y_test: products/data/y_test.parquet
-      imblearn_pipe: products/models/imblearn_pipe_template.pkl
+      nb: "{{root}}/htmls/prep_train.html"
+      X_train: "{{root}}/data/X_train.parquet"
+      y_train: "{{root}}/data/y_train.parquet"
+      X_test: "{{root}}/data/X_test.parquet"
+      y_test: "{{root}}/data/y_test.parquet"
+      imblearn_pipe: "{{root}}/models/imblearn_pipe_template.pkl"
 
   - source: scripts/cross_validate.py
     upstream: [prep_train]
     product:
-      nb: products/htmls/cross_validate.html
-      cross_val: products/ml_outputs/cross_val_scores.csv
+      nb: "{{root}}/htmls/cross_validate.html"
+      cross_val: "{{root}}/ml_outputs/cross_val_scores.csv"
 
   - source: scripts/uncal_train.py
     upstream: [prep_train]
     product:
-      nb: products/htmls/train_uncal.html
-      model: products/models/uncal_model.pkl
-      predictions: products/ml_outputs/uncal_test_set_preds.csv
+      nb: "{{root}}/htmls/train_uncal.html"
+      model: "{{root}}/models/uncal_model.pkl"
+      predictions: "{{root}}/ml_outputs/uncal_test_set_preds.csv"
 
   - source: scripts/cal_train.py
     upstream: [prep_train]
     product:
-      nb: products/htmls/train_cal.html
-      model: products/models/cal_models
-      predictions: products/ml_outputs/VAcal_test_set_preds.csv
+      nb: "{{root}}/htmls/train_cal.html"
+      model: "{{root}}/models/cal_models"
+      predictions: "{{root}}/ml_outputs/VAcal_test_set_preds.csv"
 
   - source: scripts/analyse_test_set.py
     name: analyse_test_set_uncal
     upstream: [uncal_train]
     product:
-      nb: products/htmls/analyse_test_set_uncal.html
-      roc_curve: products/ml_outputs/uncal_test_plots/roc_curve.png
-      pr_curve: products/ml_outputs/uncal_test_plots/pr_curve.png
-      cmat: products/ml_outputs/uncal_test_plots/uncal_cmat.png
-      conf_metrics: products/ml_outputs/uncal_test_cmetrics.csv
-      cal_curve: products/ml_outputs/uncal_test_plots/calibration_curve.png
-      indiv_prot_csv: products/ml_outputs/uncal_test_by_protein.csv
-      indiv_prot_plot: products/ml_outputs/uncal_test_plots/pred_by_proteins_all.png
+      nb: "{{root}}/htmls/analyse_test_set_uncal.html"
+      roc_curve: "{{root}}/ml_outputs/uncal_test_plots/roc_curve.png"
+      pr_curve: "{{root}}/ml_outputs/uncal_test_plots/pr_curve.png"
+      cmat: "{{root}}/ml_outputs/uncal_test_plots/uncal_cmat.png"
+      conf_metrics: "{{root}}/ml_outputs/uncal_test_cmetrics.csv"
+      cal_curve: "{{root}}/ml_outputs/uncal_test_plots/calibration_curve.png"
+      indiv_prot_csv: "{{root}}/ml_outputs/uncal_test_by_protein.csv"
+      indiv_prot_plot: "{{root}}/ml_outputs/uncal_test_plots/pred_by_proteins_all.png"
 
   - source: scripts/analyse_test_set.py
     name: analyse_test_set_cal
     upstream: [cal_train]
     product:
-      nb: products/htmls/analyse_test_set_cal.html
-      roc_curve: products/ml_outputs/cal_test_plots/roc_curve.png
-      pr_curve: products/ml_outputs/cal_test_plots/pr_curve.png
-      cmat: products/ml_outputs/cal_test_plots/uncal_cmat.png
-      conf_metrics: products/ml_outputs/cal_test_cmetrics.csv
-      cal_curve: products/ml_outputs/cal_test_plots/calibration_curve.png
-      indiv_prot_csv: products/ml_outputs/cal_test_by_protein.csv
-      indiv_prot_plot: products/ml_outputs/cal_test_plots/pred_by_proteins_all.png
+      nb: "{{root}}/htmls/analyse_test_set_cal.html"
+      roc_curve: "{{root}}/ml_outputs/cal_test_plots/roc_curve.png"
+      pr_curve: "{{root}}/ml_outputs/cal_test_plots/pr_curve.png"
+      cmat: "{{root}}/ml_outputs/cal_test_plots/uncal_cmat.png"
+      conf_metrics: "{{root}}/ml_outputs/cal_test_cmetrics.csv"
+      cal_curve: "{{root}}/ml_outputs/cal_test_plots/calibration_curve.png"
+      indiv_prot_csv: "{{root}}/ml_outputs/cal_test_by_protein.csv"
+      indiv_prot_plot: "{{root}}/ml_outputs/cal_test_plots/pred_by_proteins_all.png"

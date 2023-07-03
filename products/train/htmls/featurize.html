@@ -14597,12 +14597,12 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>This file is for training the model without calibration</p>
+<p>This file is for featurizing the data</p>
 
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14610,62 +14610,13 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="c1"># sklearn</span>
-<span class="kn">import</span> <span class="nn">sklearn</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedGroupKFold</span><span class="p">,</span> <span class="n">cross_validate</span>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_auc_score</span><span class="p">,</span> <span class="n">make_scorer</span><span class="p">,</span> <span class="n">recall_score</span>
-
-<span class="c1"># imblearn</span>
-<span class="kn">from</span> <span class="nn">imblearn</span> <span class="kn">import</span> <span class="n">FunctionSampler</span>
-<span class="kn">from</span> <span class="nn">imblearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
-
-<span class="c1"># custom functions</span>
-<span class="kn">from</span> <span class="nn">pythia.pcm_tools</span> <span class="kn">import</span> <span class="n">SplitData</span>
-<span class="kn">from</span> <span class="nn">functions.custom_pipeline</span> <span class="kn">import</span> <span class="n">ros_by_protein_class</span>
-
-<span class="c1"># logging</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
-<span class="n">log</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
-
-<span class="c1"># fix random seed for reproducibility</span>
-<span class="n">random_seed</span> <span class="o">=</span> <span class="mi">13579</span>
-<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Random seed: </span><span class="si">{</span><span class="n">random_seed</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pythia.pcm_tools</span> <span class="kn">import</span> <span class="n">AddFeatures</span>
 </pre></div>
 
      </div>
 </div>
 </div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre>Random seed: 13579
-</pre>
-</div>
-</div>
-
-</div>
-
 </div>
 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs   celltag_parameters">
@@ -14695,18 +14646,15 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Parameters</span>
 <span class="n">upstream</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;prep_train&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;nb&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/htmls/prep_train.html&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;X_train&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/data/X_train.parquet&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;y_train&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/data/y_train.parquet&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;X_test&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/data/X_test.parquet&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;y_test&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/data/y_test.parquet&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;imblearn_pipe&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/models/imblearn_pipe_template.pkl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;clean&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;nb&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/train/htmls/clean.html&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/train/data/cleaned_data_init.csv&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;data_no_dups&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/train/data/cleaned_data_no_fp_dups.csv&quot;</span><span class="p">,</span>
     <span class="p">}</span>
 <span class="p">}</span>
 <span class="n">product</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;nb&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/htmls/cross_validate.html&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;cross_val&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/ml_outputs/cross_val_scores.csv&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nb&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/train/htmls/featurize.html&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/bernadettelee/Documents/DPhil/TRIM/ML_QSAR/pipelines/brd_pcm_basic/products/train/data/featurized_data.parquet&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -14725,13 +14673,10 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Get the upstream name (assumes single upstream here)</span>
 <span class="n">upstream_name</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">upstream</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-<span class="c1"># load training data and sort out the columns, test set not needed here</span>
-<span class="n">X_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">upstream</span><span class="p">[</span><span class="n">upstream_name</span><span class="p">][</span><span class="s2">&quot;X_train&quot;</span><span class="p">]))</span>
-<span class="n">train_groups</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="s2">&quot;Murcko_SMILES&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">X_train</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Canon_SMILES&quot;</span><span class="p">,</span> <span class="s2">&quot;Murcko_SMILES&quot;</span><span class="p">])</span>
-<span class="n">y_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">upstream</span><span class="p">[</span><span class="n">upstream_name</span><span class="p">][</span><span class="s2">&quot;y_train&quot;</span><span class="p">]))</span>
-<span class="c1"># y_train must be a series</span>
-<span class="n">y_train</span> <span class="o">=</span> <span class="n">y_train</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+<span class="c1"># Load data and make separate dfs for ligand and protein features</span>
+<span class="c1"># Possible Morgan fingerprint duplicates already removed here</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">upstream</span><span class="p">[</span><span class="n">upstream_name</span><span class="p">][</span><span class="s2">&quot;data_no_dups&quot;</span><span class="p">]),</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s2">&quot;Canon_SMILES&quot;</span><span class="p">,</span> <span class="s2">&quot;Protein&quot;</span><span class="p">,</span> <span class="s2">&quot;Class&quot;</span><span class="p">]]</span>
 </pre></div>
 
      </div>
@@ -14747,9 +14692,11 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># load pickled imblearn pipeline (unfitted)</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">upstream</span><span class="p">[</span><span class="n">upstream_name</span><span class="p">][</span><span class="s2">&quot;imblearn_pipe&quot;</span><span class="p">],</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">pipe_clf</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Initialise the ligand featurizer</span>
+<span class="n">ligand_descriptor</span> <span class="o">=</span> <span class="s2">&quot;ecfp&quot;</span>
+<span class="n">ligand_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;radius&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;nBits&quot;</span><span class="p">:</span> <span class="mi">1024</span><span class="p">,</span> <span class="s2">&quot;useChirality&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+<span class="n">protein_descriptor</span> <span class="o">=</span> <span class="s2">&quot;CKSAAGP&quot;</span>
+<span class="n">protein_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;protein_features/</span><span class="si">{</span><span class="n">protein_descriptor</span><span class="si">}</span><span class="s2">.tsv&quot;</span>
 </pre></div>
 
      </div>
@@ -14757,7 +14704,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 </div>
 
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14765,67 +14712,27 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Check cross-validation scores</span>
-<span class="n">cross_val_cv</span> <span class="o">=</span> <span class="n">StratifiedGroupKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_seed</span><span class="p">)</span>
-<span class="n">scoring</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;roc_auc&quot;</span><span class="p">:</span> <span class="s2">&quot;roc_auc&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sensitivity&quot;</span><span class="p">:</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">recall_score</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
-    <span class="s2">&quot;specificity&quot;</span><span class="p">:</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">recall_score</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-<span class="p">}</span>
-
-<span class="n">cross_val_scores</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span>
-    <span class="n">pipe_clf</span><span class="p">,</span>
-    <span class="n">X</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
-    <span class="n">groups</span><span class="o">=</span><span class="n">train_groups</span><span class="p">,</span>
-    <span class="n">cv</span><span class="o">=</span><span class="n">cross_val_cv</span><span class="p">,</span>
-    <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Initialise class for featurization</span>
+<span class="n">pcm_data</span> <span class="o">=</span> <span class="n">AddFeatures</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span>
+    <span class="n">smiles_col</span><span class="o">=</span><span class="s2">&quot;Canon_SMILES&quot;</span><span class="p">,</span>
+    <span class="n">protein_col</span><span class="o">=</span><span class="s2">&quot;Protein&quot;</span><span class="p">,</span>
+    <span class="n">class_col</span><span class="o">=</span><span class="s2">&quot;Class&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="c1"># get protein and ligand features</span>
+<span class="n">pcm_data</span><span class="o">.</span><span class="n">get_protein_features</span><span class="p">(</span><span class="n">protein_file</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">protein_descriptor</span><span class="p">)</span>
+<span class="n">pcm_data</span><span class="o">.</span><span class="n">get_ligand_features_molfeat</span><span class="p">(</span>
+    <span class="n">ligand_descriptor</span><span class="p">,</span> <span class="n">feature_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">ligand_params</span>
+<span class="p">)</span>
+
+<span class="c1"># retain all information as this will be needed to do train-test splits!</span>
+<span class="n">pcm_data</span><span class="o">.</span><span class="n">combine_feats</span><span class="p">(</span><span class="n">file_out</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
      </div>
 </div>
 </div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>[Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
-[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.4s
-[Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
-[Pipeline] .......... (step 4 of 4) Processing classify, total=   1.7s
-[Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
-[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.4s
-[Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
-[Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
-[Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
-[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.3s
-[Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
-[Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
-[Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
-[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.3s
-[Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
-[Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
-[Pipeline] ..... (step 1 of 4) Processing preprocessing, total=   0.1s
-[Pipeline] .......... (step 2 of 4) Processing resample, total=   1.3s
-[Pipeline] .............. (step 3 of 4) Processing drop, total=   0.0s
-[Pipeline] .......... (step 4 of 4) Processing classify, total=   1.0s
-</pre>
-</div>
-</div>
-
-</div>
-
 </div>
 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
@@ -14836,138 +14743,13 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># save cross_val_scores</span>
-<span class="n">cross_val_scores_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cross_val_scores</span><span class="p">)</span>
-<span class="n">mean_scores</span> <span class="o">=</span> <span class="n">cross_val_scores_df</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-<span class="n">std_scores</span> <span class="o">=</span> <span class="n">cross_val_scores_df</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
-<span class="n">cross_val_scores_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mean_scores</span>
-<span class="n">cross_val_scores_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;std&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">std_scores</span>
-<span class="c1"># transpose df before saving, keep the index</span>
-<span class="n">cross_val_scores_df</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">product</span><span class="p">[</span><span class="s2">&quot;cross_val&quot;</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Save the data</span>
+<span class="n">pcm_data</span><span class="o">.</span><span class="n">pcm_feats_classes</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">product</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
 </pre></div>
 
      </div>
 </div>
 </div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># main output</span>
-<span class="n">cross_val_scores_df</span><span class="o">.</span><span class="n">T</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[8]:</div>
-
-
-
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>0</th>
-      <th>1</th>
-      <th>2</th>
-      <th>3</th>
-      <th>4</th>
-      <th>mean</th>
-      <th>std</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>fit_time</th>
-      <td>3.136053</td>
-      <td>2.542042</td>
-      <td>2.430657</td>
-      <td>2.407958</td>
-      <td>2.428822</td>
-      <td>2.589106</td>
-      <td>0.310233</td>
-    </tr>
-    <tr>
-      <th>score_time</th>
-      <td>0.109514</td>
-      <td>0.099980</td>
-      <td>0.093478</td>
-      <td>0.113586</td>
-      <td>0.103104</td>
-      <td>0.103932</td>
-      <td>0.007905</td>
-    </tr>
-    <tr>
-      <th>test_roc_auc</th>
-      <td>0.921138</td>
-      <td>0.936979</td>
-      <td>0.915775</td>
-      <td>0.914471</td>
-      <td>0.931959</td>
-      <td>0.924064</td>
-      <td>0.009980</td>
-    </tr>
-    <tr>
-      <th>test_sensitivity</th>
-      <td>0.795594</td>
-      <td>0.817276</td>
-      <td>0.791899</td>
-      <td>0.837599</td>
-      <td>0.857678</td>
-      <td>0.820009</td>
-      <td>0.027938</td>
-    </tr>
-    <tr>
-      <th>test_specificity</th>
-      <td>0.885030</td>
-      <td>0.900826</td>
-      <td>0.869355</td>
-      <td>0.817175</td>
-      <td>0.856335</td>
-      <td>0.865744</td>
-      <td>0.031872</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-</div>
-
 </div>
 
 </div>

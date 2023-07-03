@@ -22,7 +22,6 @@ from functions.custom_pipeline import make_imblearn_pipe, ros_by_protein_class
 
 # logging
 import logging
-
 logging.basicConfig(format="%(message)s")
 log = logging.getLogger()
 log.setLevel(logging.INFO)

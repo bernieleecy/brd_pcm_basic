@@ -1,0 +1,12 @@
+meta:
+  import_tasks_from: pipeline.preprocessing.yaml
+  extract_upstream: false
+
+tasks:
+  - source: scripts/serve_uncal.py
+    upstream: [featurize]
+    product:
+      nb: "{{root}}/htmls/serve_uncal.html"
+      predictions: "{{root}}/ml_outputs/uncal_preds.csv"
+    params:
+      path_to_model: "products/train/models/uncal_model.pkl"

@@ -3,6 +3,7 @@
 
 # %%
 import pickle
+import bz2
 import numpy as np
 import pandas as pd
 
@@ -63,7 +64,7 @@ with open(upstream["prep_train"]["imblearn_pipe"], "rb") as f:
 # Fit model on all training data
 pipe_clf.fit(X_train, y_train)
 # pickle the pipeline (where the RF model is still uncalibrated)
-with open(product["model"], "wb") as f:
+with bz2.open(product["model"], "wb") as f:
     pickle.dump(pipe_clf, f)
 
 # %%

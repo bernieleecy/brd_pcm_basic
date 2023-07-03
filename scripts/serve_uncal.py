@@ -3,6 +3,7 @@
 
 # %%
 import pickle
+import bz2
 import numpy as np
 import pandas as pd
 
@@ -44,7 +45,7 @@ pcm_data = all_data.drop(columns=["Canon_SMILES", "Class"])
 
 # %%
 # load the model
-with open(path_to_model, "rb") as f:
+with bz2.open(path_to_model, "rb") as f:
     model = pickle.load(f)
 
 # %%

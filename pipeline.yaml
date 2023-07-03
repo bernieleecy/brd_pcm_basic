@@ -23,7 +23,7 @@ tasks:
     upstream: [prep_train]
     product:
       nb: "{{root}}/htmls/train_uncal.html"
-      model: "{{root}}/models/uncal_model.pkl"
+      model: "{{root}}/models/uncal_model.pkl.bz2"
       predictions: "{{root}}/ml_outputs/uncal_test_set_preds.csv"
 
   - source: scripts/cal_train.py

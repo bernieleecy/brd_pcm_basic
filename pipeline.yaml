@@ -33,11 +33,11 @@ tasks:
       model: "{{root}}/models/cal_models"
       predictions: "{{root}}/ml_outputs/VAcal_test_set_preds.csv"
 
-  - source: scripts/analyse_test_set.py
-    name: analyse_test_set_uncal
+  - source: scripts/analyze_test_set.py
+    name: analyze_test_set_uncal
     upstream: [uncal_train]
     product:
-      nb: "{{root}}/htmls/analyse_test_set_uncal.html"
+      nb: "{{root}}/htmls/analyze_test_set_uncal.html"
       roc_curve: "{{root}}/ml_outputs/uncal_test_plots/roc_curve.png"
       pr_curve: "{{root}}/ml_outputs/uncal_test_plots/pr_curve.png"
       cmat: "{{root}}/ml_outputs/uncal_test_plots/uncal_cmat.png"
@@ -46,14 +46,14 @@ tasks:
       indiv_prot_csv: "{{root}}/ml_outputs/uncal_test_by_protein.csv"
       indiv_prot_plot: "{{root}}/ml_outputs/uncal_test_plots/pred_by_proteins_all.png"
 
-  - source: scripts/analyse_test_set.py
-    name: analyse_test_set_cal
+  - source: scripts/analyze_test_set.py
+    name: analyze_test_set_cal
     upstream: [cal_train]
     product:
-      nb: "{{root}}/htmls/analyse_test_set_cal.html"
+      nb: "{{root}}/htmls/analyze_test_set_cal.html"
       roc_curve: "{{root}}/ml_outputs/cal_test_plots/roc_curve.png"
       pr_curve: "{{root}}/ml_outputs/cal_test_plots/pr_curve.png"
-      cmat: "{{root}}/ml_outputs/cal_test_plots/uncal_cmat.png"
+      cmat: "{{root}}/ml_outputs/cal_test_plots/cal_cmat.png"
       conf_metrics: "{{root}}/ml_outputs/cal_test_cmetrics.csv"
       cal_curve: "{{root}}/ml_outputs/cal_test_plots/calibration_curve.png"
       indiv_prot_csv: "{{root}}/ml_outputs/cal_test_by_protein.csv"

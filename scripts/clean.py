@@ -37,11 +37,6 @@ data["Canon_SMILES"] = canon_smiles
 data = data.drop_duplicates(subset=["Protein", "Canon_SMILES"], keep="first")
 
 # %%
-# Sort data in the desired order (requires conversion of strings to uppercase first)
-data["Type"] = data["Type"].str.upper()
-data.sort_values(by=["Protein", "Class", "Type"], ascending=[True, False, False])
-
-# %%
 # Do data preparation and checks (based on https://github.com/vfscalfani/CSN_tutorial)
 # First check for disconnected SMILES via string matching
 data_2 = data[~data["Canon_SMILES"].str.contains("\.")].copy()
@@ -68,6 +63,7 @@ if drop_sub_50:
 print(data_2.shape)
 print(data_2["Canon_SMILES"].describe())
 print(data_2["Protein"].describe())
+print(f"Number of removed points: {data.shape[0] - data_2.shape[0]}")
 
 # %%
 # Save the cleaned data to a csv file (this is prior to removing fingerprint duplicates)
@@ -106,8 +102,16 @@ dups = set(dups)
 
 # %%
 # Get some information about the duplicates, then remove them
-print(f"Number of duplicates: {len(dups)}")
+duplicated_points = data_2.loc[data_2["Canon_SMILES"].isin(dups)]
+print(f"Number of duplicate fingerprints: {len(dups)}")
+print(f"Total duplicated points: {duplicated_points.shape[0]}")
 
+# %%
+# Save the fingerprint duplicates to enable further inspection
+duplicated_points.to_csv(str(product["duplicates"]))
+
+# %%
+# Remove the duplicates from the data
 data_no_dups = data_2.loc[~data_2["Canon_SMILES"].isin(dups)]
 print(f"Remaining data points: {data_no_dups.shape[0]}")
 

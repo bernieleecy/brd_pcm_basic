@@ -10,3 +10,11 @@ tasks:
       predictions: "{{root}}/ml_outputs/uncal_preds.csv"
     params:
       path_to_model: "products/train/models/uncal_model.pkl.bz2"
+
+  - source: scripts/analyze_serve.py
+    name: analyze_serve_uncal
+    upstream: [serve_uncal]
+    product:
+      nb: "{{root}}/htmls/analyze_serve_uncal.html"
+      cmat: "{{root}}/ml_outputs/uncal_plots/uncal_cmat.png"
+      conf_metrics: "{{root}}/ml_outputs/uncal_cmetrics.csv"

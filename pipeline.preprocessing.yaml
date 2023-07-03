@@ -5,6 +5,9 @@
     nb: "{{root}}/htmls/clean.html"
     data: "{{root}}/data/cleaned_data_init.csv"
     data_no_dups: "{{root}}/data/cleaned_data_no_fp_dups.csv"
+  params:
+    brd_data: "{{brd_data}}"
+    drop_sub_50: "{{drop_sub_50}}"
 
 - source: scripts/featurize.py
   upstream: [clean]

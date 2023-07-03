@@ -13,11 +13,13 @@ from rdkit.DataManip.Metric import GetTanimotoSimMat
 # %% tags=["parameters"]
 upstream = None
 product = None
+brd_data = None
+drop_sub_50 = None
 
 # %%
 # Read in the data from a specified csv file in the folder
 # paths are relative to pipeline.yaml
-data = pd.read_csv("data/chembl33_combined_init.csv", index_col=0)
+data = pd.read_csv(brd_data, index_col=0)
 
 # %%
 # Check for SMILES, Protein and Class columns (all must be present)
@@ -56,11 +58,12 @@ data_2 = data_2[data_2["num_frags"] == 1]
 data_2 = data_2.drop(columns=["num_frags"])
 
 # %%
-# Remove bromodomains with fewer than 50 entries
-few_points = data_2["Protein"].value_counts() < 50  # boolean
-few_points_idx = few_points[few_points].index
+# Remove bromodomains with fewer than 50 entries (during training only)
+if drop_sub_50:
+    few_points = data_2["Protein"].value_counts() < 50  # boolean
+    few_points_idx = few_points[few_points].index
 
-data_2 = data_2.loc[~data_2["Protein"].isin(few_points_idx)]
+    data_2 = data_2.loc[~data_2["Protein"].isin(few_points_idx)]
 
 print(data_2.shape)
 print(data_2["Canon_SMILES"].describe())

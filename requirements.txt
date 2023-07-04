@@ -5,4 +5,5 @@ seaborn==0.12.2
 scikit-learn==1.2.2
 scipy==1.8.1
 imbalanced-learn==0.10.1
+molfeat==0.8.6
 ploomber==0.22.4

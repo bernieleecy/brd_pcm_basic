@@ -3,7 +3,7 @@
 
 # %%
 import pandas as pd
-from pythia.pcm_tools import AddFeatures
+from brd_pcm.pcm_tools.data_prep import AddFeatures
 
 # %% tags=["parameters"]
 upstream = None
@@ -38,9 +38,7 @@ pcm_data.get_protein_features(protein_file, name=protein_descriptor)
 pcm_data.get_ligand_features_molfeat(
     ligand_descriptor, feature_path=None, **ligand_params
 )
-
-# retain all information as this will be needed to do train-test splits!
-pcm_data.combine_feats(file_out=False, drop=False)
+pcm_data.combine_feats()
 
 # %%
 # Save the data

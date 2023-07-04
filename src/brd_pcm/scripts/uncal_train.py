@@ -18,8 +18,7 @@ from imblearn import FunctionSampler
 from imblearn.pipeline import Pipeline
 
 # custom functions
-from pythia.pcm_tools import run_CVAP
-from brd_pcm.pcm_tools.custom_pipeline import make_imblearn_pipe, ros_by_protein_class
+from brd_pcm.pcm_tools.ml import ros_by_protein_class
 
 # logging
 import logging

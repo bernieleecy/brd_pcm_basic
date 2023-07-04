@@ -18,8 +18,7 @@ from imblearn import FunctionSampler
 from imblearn.pipeline import Pipeline
 
 # custom functions
-from pythia.pcm_tools import SplitData
-from brd_pcm.pcm_tools.custom_pipeline import ros_by_protein_class
+from brd_pcm.pcm_tools.ml import ros_by_protein_class
 
 # logging
 import logging

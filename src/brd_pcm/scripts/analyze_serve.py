@@ -12,7 +12,6 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.metrics import classification_report
 
 import pythia.classification_metrics as cmetrics
-from pythia.pcm_tools import get_by_protein_preds, plot_by_protein_preds
 
 # logging
 import logging

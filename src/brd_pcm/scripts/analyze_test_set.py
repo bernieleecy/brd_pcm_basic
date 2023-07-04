@@ -15,7 +15,7 @@ from sklearn.metrics import PrecisionRecallDisplay, precision_recall_curve, auc
 from sklearn.calibration import calibration_curve, CalibrationDisplay
 
 import pythia.classification_metrics as cmetrics
-from pythia.pcm_tools import get_by_protein_preds, plot_by_protein_preds
+from brd_pcm.pcm_tools.evaluate import get_by_protein_preds, plot_by_protein_preds
 
 # logging
 import logging

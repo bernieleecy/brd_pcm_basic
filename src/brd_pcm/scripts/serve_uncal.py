@@ -17,7 +17,7 @@ from imblearn import FunctionSampler
 from imblearn.pipeline import Pipeline
 
 # custom functions
-from functions.custom_pipeline import ros_by_protein_class
+from brd_pcm.functions.custom_pipeline import ros_by_protein_class
 
 # logging
 import logging

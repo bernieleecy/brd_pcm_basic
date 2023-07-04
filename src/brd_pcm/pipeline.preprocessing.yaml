@@ -1,5 +1,4 @@
-# this provides the cleaning and featurizing tasks for training and inference
-
+# do not add meta here, since this gets imported into other .yaml files
 - source: scripts/clean.py
   product:
     nb: "{{root}}/htmls/clean.html"

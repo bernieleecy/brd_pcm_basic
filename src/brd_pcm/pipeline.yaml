@@ -1,6 +1,8 @@
 meta:
   import_tasks_from: pipeline.preprocessing.yaml
   extract_upstream: false
+  source_loader:
+    module: brd_pcm
 
 tasks:
   - source: scripts/prep_train.py

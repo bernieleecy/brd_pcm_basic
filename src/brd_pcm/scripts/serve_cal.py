@@ -19,7 +19,7 @@ from imblearn.pipeline import Pipeline
 
 # custom functions
 from pythia.pcm_tools import predict_CVAP
-from brd_pcm.functions.custom_pipeline import ros_by_protein_class
+from brd_pcm.pcm_tools.custom_pipeline import ros_by_protein_class
 
 # logging
 import logging

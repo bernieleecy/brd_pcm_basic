@@ -21,7 +21,7 @@ from imblearn.pipeline import Pipeline
 
 # custom functions
 from pythia.pcm_tools import SplitData
-from brd_pcm.functions.custom_pipeline import make_imblearn_pipe, ros_by_protein_class
+from brd_pcm.pcm_tools.custom_pipeline import make_imblearn_pipe, ros_by_protein_class
 
 # logging
 import logging

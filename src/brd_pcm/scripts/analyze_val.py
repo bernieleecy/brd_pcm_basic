@@ -1,5 +1,5 @@
 # %% [markdown]
-# This file is for examining the model performance on new predictions
+# This file is for examining the model performance on unseen ligands with known classes
 
 # %%
 import numpy as np

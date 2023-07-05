@@ -2,11 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-from sklearn.metrics import roc_auc_score, confusion_matrix
-
-# other pythia modules
-from pythia import classification_metrics as cmetrics
-from .VennABERS import ScoresToMultiProbs
+from sklearn.metrics import roc_auc_score, recall_score
 
 import logging
 
@@ -33,6 +29,8 @@ def get_by_protein_preds(
             class 1 in binary classification).
         protein_col (str): Name of the column containing protein data.
         class_col (str): Name of the column containing class data.
+        outfile (str, optional): Path to save the results to. Defaults to None.
+        va_pred (bool, optional): Whether the predictions have Venn-ABERS calibration applied.
 
     Returns:
         dict: Dictionary containing the results (protein with roc_auc, recall and tnr)
@@ -69,12 +67,11 @@ def get_by_protein_preds(
             roc_auc = roc_auc_score(df_protein[class_col], df_protein["P (class 1)"])
         except:
             roc_auc = np.nan
-        cm = confusion_matrix(
-            df_protein[class_col], df_protein["Predicted value"], labels=(0, 1)
+        # compute recall (senstivity) and tnr (specificity)
+        recall = recall_score(df_protein[class_col], df_protein["Predicted value"])
+        tnr = recall_score(
+            df_protein[class_col], df_protein["Predicted value"], pos_label=0
         )
-        conf_metrics = cmetrics.calculate_confusion_based_metrics(cm)
-        recall = conf_metrics["recall"]  # aka sensitivity
-        tnr = conf_metrics["tnr"]  # aka specificity
 
         metrics = [roc_auc, recall, tnr]
 

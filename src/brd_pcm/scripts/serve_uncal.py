@@ -41,7 +41,7 @@ path_to_model = None
 upstream_name = list(upstream)[0]
 # load the data for predictions and sort out the columns
 all_data = pd.read_parquet(str(upstream[upstream_name]["data"]))
-pcm_data = all_data.drop(columns=["Canon_SMILES", "Class"])
+pcm_data = all_data.drop(columns=["Canon_SMILES"])
 
 # %%
 # load the model
@@ -54,7 +54,7 @@ y_pred = model.predict(pcm_data)
 y_pred_proba = model.predict_proba(pcm_data)
 
 # %% save predictions
-pred_df = all_data.loc[:,["Canon_SMILES", "Protein", "Class"]]
+pred_df = all_data.loc[:,["Canon_SMILES", "Protein"]]
 pred_df["Predicted value"] = y_pred
 pred_df["P (class 0)"] = y_pred_proba[:, 0]
 pred_df["P (class 1)"] = y_pred_proba[:, 1]

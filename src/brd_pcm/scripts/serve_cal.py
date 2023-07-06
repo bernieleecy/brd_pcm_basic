@@ -45,8 +45,7 @@ model_folder = None
 upstream_name = list(upstream)[0]
 # load the data for predictions and sort out the columns
 all_data = pd.read_parquet(str(upstream[upstream_name]["data"]))
-pcm_data = all_data.drop(columns=["Canon_SMILES", "Class"])
-classes = all_data["Class"].squeeze()
+pcm_data = all_data.drop(columns=["Canon_SMILES"])
 
 # %%
 # load the X_train and y_train data (required to set up calibration)
@@ -66,7 +65,6 @@ va_df = predict_CVAP(
     X_train=X_train,
     y_train=y_train,
     X_test=pcm_data,
-    y_test=classes,
     clf_dir=model_folder,
     cv_indices=cv_indices,
 )
@@ -80,7 +78,7 @@ va_df.head()
 pred_df = all_data.loc[:, ["Canon_SMILES", "Protein"]]
 pred_df = pd.concat([pred_df, va_df], axis=1)
 pred_df = pred_df.rename(
-    columns={"True value": "Class", "avg_single_prob": "P (class 1)"}
+    columns={"avg_single_prob": "P (class 1)"}
 )
 
 pred_df.to_csv(product["predictions"], index=False)

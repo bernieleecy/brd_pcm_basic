@@ -246,7 +246,6 @@ def predict_CVAP(
     X_train,
     y_train,
     X_test,
-    y_test,
     clf_dir,
     cv_indices,
     threshold=0.5,
@@ -258,15 +257,13 @@ def predict_CVAP(
         X_train (pd DataFrame): DataFrame containing training data (with features).
         y_train (pd Series): Series containing training labels.
         X_test (pd DataFrame): DataFrame containing test data (with features).
-        y_test (pd Series): Series containing test labels.
         clf_dir (str): Path to directory containing pickled classifiers.
         cv_indices (list): List of tuples containing train/test indices for each CV split.
         threshold (float, optional): Threshold for classification. Defaults to 0.5.
         outdir (str, optional): Path to output directory. Defaults to None.
 
     Returns:
-        DataFrame: DataFrame containing true val, predicted val, and venn-abers
-            predictions on the test set
+        DataFrame: DataFrame containing predicted val, and the calibrated probabilities.
     """
     test_length = len(X_test)
     per_fold_p0 = np.zeros((test_length, len(cv_indices)))
@@ -320,10 +317,9 @@ def predict_CVAP(
     diff_p1_p0 = amean_p1 - amean_p0
 
     test_preds = pd.DataFrame(
-        [y_test, y_pred, avg_single, amean_p0, amean_p1, diff_p1_p0]
+        [y_pred, avg_single, amean_p0, amean_p1, diff_p1_p0]
     ).T
     test_preds.columns = [
-        "True value",
         "Predicted value",
         "avg_single_prob",
         "amean_p0",

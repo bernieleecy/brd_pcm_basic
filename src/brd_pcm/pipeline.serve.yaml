@@ -1,0 +1,25 @@
+meta:
+  import_tasks_from: pipeline.preprocessing.yaml
+  extract_upstream: false
+  source_loader:
+    module: brd_pcm
+
+tasks:
+  - source: scripts/serve_uncal.py
+    upstream: [featurize]
+    product:
+      nb: "{{root}}/htmls/serve_uncal.html"
+      predictions: "{{root}}/ml_outputs/uncal_preds.csv"
+    params:
+      path_to_model: "products/train/models/uncal_model.pkl.bz2"
+
+  - source: scripts/serve_cal.py
+    upstream: [featurize]
+    product:
+      nb: "{{root}}/htmls/serve_cal.html"
+      predictions: "{{root}}/ml_outputs/cal_preds.csv"
+    params:
+      X_train_data: "products/train/data/X_train.parquet"
+      y_train_data: "products/train/data/y_train.parquet"
+      cv_data: "products/train/models/VA_cv_indices.pkl"
+      model_folder: "products/train/models/cal_models"

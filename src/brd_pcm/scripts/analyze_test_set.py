@@ -7,19 +7,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-import sklearn
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.metrics import classification_report
 from sklearn.metrics import roc_auc_score, RocCurveDisplay
 from sklearn.metrics import PrecisionRecallDisplay, precision_recall_curve, auc
 from sklearn.calibration import calibration_curve, CalibrationDisplay
 
-from brd_pcm.pcm_tools.evaluate import (
-    get_by_protein_preds,
-    plot_by_protein_preds,
-    get_pr_auc,
-    get_key_cmetrics,
-)
+from brd_pcm.pcm_tools.evaluate import get_pr_auc, get_key_cmetrics
 
 # logging
 import logging
@@ -111,17 +105,3 @@ calib_disp = CalibrationDisplay.from_predictions(
 ax.legend(frameon=False)
 
 fig.savefig(product["cal_curve"], dpi=600)
-
-# %%
-# get results by protein
-indiv_prot_results = get_by_protein_preds(
-    pred_df, protein_col="Protein", class_col="Class", outfile=None
-)
-indiv_prot_results.to_csv(product["indiv_prot_csv"], float_format="%.3f")
-
-# %% plot all proteins on the same axes
-fig, ax = plt.subplots(figsize=(13, 5), constrained_layout=True)
-
-plot_by_protein_preds(indiv_prot_results, ax=ax)
-
-fig.savefig(product["indiv_prot_plot"], dpi=600)

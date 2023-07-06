@@ -15,6 +15,7 @@ upstream = None
 product = None
 brd_data = None
 drop_sub_50 = None
+known_classes = None
 
 # %%
 # Read in the data from a specified csv file in the folder
@@ -22,13 +23,15 @@ drop_sub_50 = None
 data = pd.read_csv(brd_data, index_col=0)
 
 # %%
-# Check for SMILES, Protein and Class columns (all must be present)
+# Check for SMILES and Protein columns
 if "SMILES" not in data.columns:
     raise ValueError("SMILES column not found")
 if "Protein" not in data.columns:
     raise ValueError("Protein column not found")
-if "Class" not in data.columns:
-    raise ValueError("Class column not found")
+# if classes is expected, check for the Class column
+if known_classes:
+    if "Class" not in data.columns:
+        raise ValueError("Class column not found")
 
 # %%
 # Make Canon_SMILES column, then remove duplicates (prioritising ChEMBL entries)

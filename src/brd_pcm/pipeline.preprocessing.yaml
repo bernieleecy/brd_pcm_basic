@@ -8,9 +8,12 @@
   params:
     brd_data: "{{brd_data}}"
     drop_sub_50: "{{drop_sub_50}}"
+    known_classes: "{{known_classes}}"
 
 - source: scripts/featurize.py
   upstream: [clean]
   product:
     nb: "{{root}}/htmls/featurize.html"
     data: "{{root}}/data/featurized_data.parquet"
+  params:
+    known_classes: "{{known_classes}}"

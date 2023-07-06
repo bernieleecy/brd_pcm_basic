@@ -15,14 +15,13 @@ log = logging.getLogger(__name__)
 
 class AddFeatures:
 
-    """A class to add features to protein and ligands prior to splitting datasets
+    """A class to add features to protein and ligands prior to splitting datasets.
+    Only takes in ligand and protein information.
 
     Attributes:
         df (pd DataFrame): DataFrame with shape (n_samples, n_cols).
-        smiles_col (str): Name of column with SMILES strings.
-        protein_col (str): Name of column with protein names.
-        class_col (str): Name of column with class labels.
-        group_col (str): Name of column with group labels.
+        smiles_col (str): Name of column containing SMILES strings. Defaults to "Canon_SMILES".
+        protein_col (str): Name of column containing protein names. Defaults to "Protein".
         pcm_feats_classes (pd DataFrame): DataFrame with shape (n_samples,
             n_cols+n_feats). Produced by combine_feats().
     """
@@ -32,15 +31,11 @@ class AddFeatures:
         df,
         smiles_col="Canon_SMILES",
         protein_col="Protein",
-        class_col="Class",
-        group_col=None,
     ):
         self.df = df.copy()
         self.smiles_col = smiles_col
         self.protein_col = protein_col
-        self.class_col = class_col
-        self.group_col = group_col
-        self.pcm_feats_classes = None
+        self.pcm_feats = None
 
     def get_ligand_features_molfeat(self, featurizer, feature_path=None, **params):
         """Use the molfeat package to featurise ligands
@@ -53,23 +48,12 @@ class AddFeatures:
         tmp_lig_feats = mol_transf(self.df[self.smiles_col])
         self._lig_feats = pd.DataFrame(tmp_lig_feats)
 
-        if self.group_col is not None:
-            self._lig_feats = self._lig_feats.set_index(
-                [
-                    self.df[self.smiles_col],
-                    self.df[self.protein_col],
-                    self.df[self.group_col],
-                    self.df[self.class_col],
-                ]
-            )
-        else:
-            self._lig_feats = self._lig_feats.set_index(
-                [
-                    self.df[self.smiles_col],
-                    self.df[self.protein_col],
-                    self.df[self.class_col],
-                ]
-            )
+        self._lig_feats = self._lig_feats.set_index(
+            [
+                self.df[self.smiles_col],
+                self.df[self.protein_col],
+            ]
+        )
 
         # convert columns to str to help w/ sklearn later on
         self._lig_feats.columns = self._lig_feats.columns.astype(str)
@@ -120,7 +104,7 @@ class AddFeatures:
         Returns:
             pd DataFrame: DataFrame with shape (n_samples, n_cols).
         """
-        self.pcm_feats_classes = self._lig_feats.reset_index().merge(
+        self.pcm_feats = self._lig_feats.reset_index().merge(
             self._protein_df, how="left", left_on="Protein", right_index=True
         )
 

@@ -5,18 +5,18 @@ meta:
     module: brd_pcm
 
 tasks:
-  - source: scripts/val_uncal.py
+  - source: scripts/extra_test_uncal.py
     upstream: [featurize]
     product:
-      nb: "{{root}}/htmls/val_uncal.html"
+      nb: "{{root}}/htmls/extra_test_uncal.html"
       predictions: "{{root}}/ml_outputs/uncal_preds.csv"
     params:
       path_to_model: "products/train/models/uncal_model.pkl.bz2"
 
-  - source: scripts/val_cal.py
+  - source: scripts/extra_test_cal.py
     upstream: [featurize]
     product:
-      nb: "{{root}}/htmls/val_cal.html"
+      nb: "{{root}}/htmls/extra_test_cal.html"
       predictions: "{{root}}/ml_outputs/cal_preds.csv"
     params:
       X_train_data: "products/train/data/X_train.parquet"
@@ -24,18 +24,18 @@ tasks:
       cv_data: "products/train/models/VA_cv_indices.pkl"
       model_folder: "products/train/models/cal_models"
 
-  - source: scripts/analyze_val.py
-    name: analyze_val_uncal
-    upstream: [val_uncal]
+  - source: scripts/extra_test_analyze.py
+    name: extra_test_analyze_uncal
+    upstream: [extra_test_uncal]
     product:
-      nb: "{{root}}/htmls/analyze_val_uncal.html"
+      nb: "{{root}}/htmls/extra_test_analyze_uncal.html"
       cmat: "{{root}}/ml_outputs/uncal_plots/uncal_cmat.png"
       conf_metrics: "{{root}}/ml_outputs/uncal_cmetrics.csv"
 
-  - source: scripts/analyze_val.py
-    name: analyze_val_cal
-    upstream: [val_cal]
+  - source: scripts/extra_test_analyze.py
+    name: extra_test_analyze_cal
+    upstream: [extra_test_cal]
     product:
-      nb: "{{root}}/htmls/analyze_val_cal.html"
+      nb: "{{root}}/htmls/extra_test_analyze_cal.html"
       cmat: "{{root}}/ml_outputs/cal_plots/cal_cmat.png"
       conf_metrics: "{{root}}/ml_outputs/cal_cmetrics.csv"

@@ -2,11 +2,88 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-from sklearn.metrics import roc_auc_score, recall_score
+from sklearn.metrics import (
+    roc_auc_score,
+    recall_score,
+    matthews_corrcoef,
+    f1_score,
+    precision_score,
+    balanced_accuracy_score,
+    precision_recall_curve,
+    auc,
+)
+from imblearn.metrics import geometric_mean_score
 
 import logging
 
 log = logging.getLogger(__name__)
+
+
+def get_pr_auc(y_true, y_pred, pos_label=1):
+    """Get the precision-recall AUC.
+
+    Args:
+        y_true (np array): Array of true labels.
+        y_pred (np array): Array of predicted labels.
+        pos_label (int, optional): Positive label. Defaults to 1.
+
+    Returns:
+        float: Precision-recall AUC
+    """
+    precision, recall, _ = precision_recall_curve(y_true, y_pred, pos_label=pos_label)
+    pr_auc = auc(recall, precision)
+    return pr_auc
+
+
+def get_key_cmetrics(y_true, y_pred, y_pred_proba=None, pos_label=1):
+    """Get key metrics for binary classification
+
+    Args:
+        y_true (np array): Array of true labels.
+        y_pred (np array): Array of predicted labels.
+        y_pred_proba (np array, optional): Array of predicted probabilities. Defaults to
+            None.
+        pos_label (int, optional): Positive label. Defaults to 1.
+
+    Returns:
+        dict: Dictionary containing the metrics.
+    """
+    metrics = {}
+
+    # get MCC
+    mcc = matthews_corrcoef(y_true, y_pred)
+    metrics["mcc"] = mcc
+
+    # get precision
+    precision = precision_score(y_true, y_pred, pos_label=pos_label)
+    metrics["precision"] = precision
+
+    # get sensitivity (recall) and specificity (tnr)
+    recall = recall_score(y_true, y_pred)
+    tnr = recall_score(y_true, y_pred, pos_label=0)
+    metrics["recall"] = recall
+    metrics["tnr"] = tnr
+
+    # get geometric mean (of sensitivity and specificity)
+    gmean = geometric_mean_score(y_true, y_pred)
+    metrics["gmean"] = gmean
+
+    # get F1
+    f1 = f1_score(y_true, y_pred, pos_label=pos_label)
+    metrics["f1"] = f1
+
+    # get balanced accuracy
+    balanced_acc = balanced_accuracy_score(y_true, y_pred)
+    metrics["balanced_acc"] = balanced_acc
+
+    # these metrics require predicted probabilities
+    if y_pred_proba is not None:
+        roc_auc = roc_auc_score(y_true, y_pred_proba)
+        pr_auc = get_pr_auc(y_true, y_pred_proba, pos_label=pos_label)
+        metrics["roc_auc"] = roc_auc
+        metrics["pr_auc"] = pr_auc
+
+    return metrics
 
 
 # Parse classification results by protein

@@ -11,7 +11,7 @@ import sklearn
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.metrics import classification_report
 
-import pythia.classification_metrics as cmetrics
+from brd_pcm.pcm_tools.evaluate import get_key_cmetrics
 
 # logging
 import logging
@@ -20,7 +20,8 @@ logging.basicConfig(format="%(message)s")
 log = logging.getLogger()
 log.setLevel(logging.INFO)
 
-# set plotting preferences
+# set display and plotting preferences
+pd.options.display.float_format = "{:.3f}".format
 sns.set_style("ticks")
 plt.style.use("plotstyle.mplstyle")
 sns.set_palette("colorblind")
@@ -54,18 +55,12 @@ fig.savefig(product["cmat"], bbox_inches="tight", dpi=600)
 
 # %%
 # calculate confusion based metrics (this needs to be reworked) and save to csv
-conf_metrics = cmetrics.calculate_confusion_based_metrics(conf_mat)
+conf_metrics = get_key_cmetrics(
+    y_true=pred_df["Class"],
+    y_pred=pred_df["Predicted value"],
+    y_pred_proba=pred_df["P (class 1)"],
+)
 conf_metrics_df = pd.DataFrame(conf_metrics, index=[0])
-conf_metrics_df = conf_metrics_df[
-    [
-        "matthews_correlation_coefficient",
-        "precision",
-        "recall",
-        "tnr",
-        "f1",
-        "g-mean",
-        "accuracy",
-    ]
-]
 
 conf_metrics_df.to_csv(product["conf_metrics"], float_format="%.3f", index=False)
+conf_metrics_df

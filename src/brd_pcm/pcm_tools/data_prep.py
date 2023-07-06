@@ -152,6 +152,10 @@ class SplitData:
             self.X_data["Protein"].values + "-" + self.y_data.astype(str)
         )
         self.length = len(X_data)
+        self.X_train = None
+        self.X_test = None
+        self.y_train = None
+        self.y_test = None
 
     def __len__(self):
         return self.length
@@ -218,17 +222,17 @@ class SplitData:
         self.y_test = self.y_data.loc[test_idx]
 
     def check_disjoint(self, smiles_col="Canon_SMILES"):
-        self.X_train_unique = set(self.X_train[smiles_col])
-        self.X_test_unique = set(self.X_test[smiles_col])
-        print(f"Unique ligands in train: {len(self.X_train_unique)}")
-        print(f"Unique ligands in test: {len(self.X_test_unique)}")
-        if self.X_train_unique.isdisjoint(self.X_test_unique):
+        X_train_unique = set(self.X_train[smiles_col])
+        X_test_unique = set(self.X_test[smiles_col])
+        print(f"Unique ligands in train: {len(X_train_unique)}")
+        print(f"Unique ligands in test: {len(X_test_unique)}")
+        if X_train_unique.isdisjoint(X_test_unique):
             print("No overlap in ligands between train and test sets")
             return True
         else:
-            self.overlap = self.X_train_unique.intersection(self.X_test_unique)
-            print(f"Overlap between sets: {len(self.overlap)}")
+            overlap = X_train_unique.intersection(X_test_unique)
+            print(f"Overlap between sets: {len(overlap)}")
             print(
-                f"Percent of test set ligands in train: {len(self.overlap) / len(self.X_test_unique):.1%}"
+                f"Percent of test set ligands in train: {len(overlap) / len(X_test_unique):.1%}"
             )
             return False

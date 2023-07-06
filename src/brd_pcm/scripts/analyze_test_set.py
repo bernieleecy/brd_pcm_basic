@@ -14,8 +14,12 @@ from sklearn.metrics import roc_auc_score, RocCurveDisplay
 from sklearn.metrics import PrecisionRecallDisplay, precision_recall_curve, auc
 from sklearn.calibration import calibration_curve, CalibrationDisplay
 
-import pythia.classification_metrics as cmetrics
-from brd_pcm.pcm_tools.evaluate import get_by_protein_preds, plot_by_protein_preds
+from brd_pcm.pcm_tools.evaluate import (
+    get_by_protein_preds,
+    plot_by_protein_preds,
+    get_pr_auc,
+    get_key_cmetrics,
+)
 
 # logging
 import logging
@@ -24,7 +28,8 @@ logging.basicConfig(format="%(message)s")
 log = logging.getLogger()
 log.setLevel(logging.INFO)
 
-# set plotting preferences
+# set display and plotting preferences
+pd.options.display.float_format = "{:.3f}".format
 sns.set_style("ticks")
 plt.style.use("plotstyle.mplstyle")
 sns.set_palette("colorblind")
@@ -58,15 +63,14 @@ fig.savefig(product["roc_curve"], dpi=600)
 # %%
 # get precision-recall curve, this doesn't really consider the inactive class
 fig, ax = plt.subplots(figsize=(5, 4), constrained_layout=True)
-prec, rec, _ = precision_recall_curve(pred_df["Class"], pred_df["P (class 1)"])
-prauc = auc(rec, prec)
-log.info(f"PRAUC is {prauc:.3f}")
+pr_auc = get_pr_auc(pred_df["Class"], pred_df["P (class 1)"])
+log.info(f"PRAUC is {pr_auc:.3f}")
 pr_disp = PrecisionRecallDisplay.from_predictions(
     pred_df["Class"], pred_df["P (class 1)"], ax=ax, color="black"
 )
 
 # change legend label name
-pr_disp.line_.set_label(f"PRAUC = {prauc:.3f}")
+pr_disp.line_.set_label(f"PRAUC = {pr_auc:.3f}")
 ax.legend(frameon=False)
 fig.savefig(product["pr_curve"], dpi=600)
 
@@ -87,26 +91,16 @@ ax.set(xlabel="Predicted class", ylabel="Known class")
 fig.savefig(product["cmat"], bbox_inches="tight", dpi=600)
 
 # %%
-# calculate confusion based metrics (this needs to be reworked) and save to csv
-conf_metrics = cmetrics.calculate_confusion_based_metrics(conf_mat)
+# calculate confusion based metrics and save to csv
+conf_metrics = get_key_cmetrics(
+    y_true=pred_df["Class"],
+    y_pred=pred_df["Predicted value"],
+    y_pred_proba=pred_df["P (class 1)"],
+)
 conf_metrics_df = pd.DataFrame(conf_metrics, index=[0])
-conf_metrics_df["roc_auc"] = roc_auc
-conf_metrics_df["prauc"] = prauc
-conf_metrics_df = conf_metrics_df[
-    [
-        "matthews_correlation_coefficient",
-        "roc_auc",
-        "prauc",
-        "precision",
-        "recall",
-        "tnr",
-        "f1",
-        "g-mean",
-        "accuracy",
-    ]
-]
 
 conf_metrics_df.to_csv(product["conf_metrics"], float_format="%.3f", index=False)
+conf_metrics_df
 
 # %%
 # calibration curve
@@ -119,14 +113,14 @@ ax.legend(frameon=False)
 fig.savefig(product["cal_curve"], dpi=600)
 
 # %%
-# get results by protein (this also requires a rework)
+# get results by protein
 indiv_prot_results = get_by_protein_preds(
     pred_df, protein_col="Protein", class_col="Class", outfile=None
 )
 indiv_prot_results.to_csv(product["indiv_prot_csv"], float_format="%.3f")
 
 # %% plot all proteins on the same axes
-fig, ax = plt.subplots(figsize=(13,5), constrained_layout=True)
+fig, ax = plt.subplots(figsize=(13, 5), constrained_layout=True)
 
 plot_by_protein_preds(indiv_prot_results, ax=ax)
 

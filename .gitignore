@@ -10,7 +10,8 @@
 *.html
 *.bz2
 
-# Exclude everything in the products/ folder
+# Exclude everything in the inputs/ and products/ folders
+inputs/
 products/
 
 # the rest is from ploomber scaffold

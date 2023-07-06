@@ -8,7 +8,6 @@ import numpy as np
 import pandas as pd
 
 # sklearn
-import sklearn
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import StratifiedGroupKFold
 from sklearn.ensemble import RandomForestClassifier

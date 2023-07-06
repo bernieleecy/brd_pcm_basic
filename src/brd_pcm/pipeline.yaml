@@ -46,6 +46,12 @@ tasks:
       cmat: "{{root}}/ml_outputs/uncal_test_plots/uncal_cmat.png"
       conf_metrics: "{{root}}/ml_outputs/uncal_test_cmetrics.csv"
       cal_curve: "{{root}}/ml_outputs/uncal_test_plots/calibration_curve.png"
+
+  - source: scripts/analyze_test_proteins.py
+    name: analyze_test_proteins_uncal
+    upstream: [uncal_train]
+    product:
+      nb: "{{root}}/htmls/analyze_test_proteins_uncal.html"
       indiv_prot_csv: "{{root}}/ml_outputs/uncal_test_by_protein.csv"
       indiv_prot_plot: "{{root}}/ml_outputs/uncal_test_plots/pred_by_proteins_all.png"
 
@@ -59,5 +65,11 @@ tasks:
       cmat: "{{root}}/ml_outputs/cal_test_plots/cal_cmat.png"
       conf_metrics: "{{root}}/ml_outputs/cal_test_cmetrics.csv"
       cal_curve: "{{root}}/ml_outputs/cal_test_plots/calibration_curve.png"
+
+  - source: scripts/analyze_test_proteins.py
+    name: analyze_test_proteins_cal
+    upstream: [cal_train]
+    product:
+      nb: "{{root}}/htmls/analyze_test_proteins_cal.html"
       indiv_prot_csv: "{{root}}/ml_outputs/cal_test_by_protein.csv"
       indiv_prot_plot: "{{root}}/ml_outputs/cal_test_plots/pred_by_proteins_all.png"

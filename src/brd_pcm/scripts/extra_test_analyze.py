@@ -7,7 +7,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-import sklearn
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.metrics import classification_report
 

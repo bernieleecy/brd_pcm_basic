@@ -10,8 +10,8 @@ import seaborn as sns
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.metrics import classification_report
 from sklearn.metrics import roc_auc_score, RocCurveDisplay
-from sklearn.metrics import PrecisionRecallDisplay, precision_recall_curve, auc
-from sklearn.calibration import calibration_curve, CalibrationDisplay
+from sklearn.metrics import PrecisionRecallDisplay
+from sklearn.calibration import CalibrationDisplay
 
 from brd_pcm.pcm_tools.evaluate import get_pr_auc, get_key_cmetrics
 

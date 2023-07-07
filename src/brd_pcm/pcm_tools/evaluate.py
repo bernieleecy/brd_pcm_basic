@@ -78,8 +78,14 @@ def get_key_cmetrics(y_true, y_pred, y_pred_proba=None, pos_label=1):
 
     # these metrics require predicted probabilities
     if y_pred_proba is not None:
-        roc_auc = roc_auc_score(y_true, y_pred_proba)
-        pr_auc = get_pr_auc(y_true, y_pred_proba, pos_label=pos_label)
+        try:
+            roc_auc = roc_auc_score(y_true, y_pred_proba)
+        except:
+            roc_auc = np.nan
+        try:
+            pr_auc = get_pr_auc(y_true, y_pred_proba, pos_label=pos_label)
+        except:
+            pr_auc = np.nan
         metrics["roc_auc"] = roc_auc
         metrics["pr_auc"] = pr_auc
 

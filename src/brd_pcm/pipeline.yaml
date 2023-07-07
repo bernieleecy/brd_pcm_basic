@@ -54,6 +54,12 @@ tasks:
       nb: "{{root}}/htmls/analyze_test_proteins_uncal.html"
       indiv_prot_csv: "{{root}}/ml_outputs/uncal_test_by_protein.csv"
       indiv_prot_plot: "{{root}}/ml_outputs/uncal_test_plots/pred_by_proteins_all.png"
+    nbconvert_export_kwargs:
+      config:
+        HTMLExporter:
+          preprocessors: [nbconvert.preprocessors.TagRemovePreprocessor]
+        TagRemovePreprocessor:
+          remove_cell_tags: [dictionary]
 
   - source: scripts/analyze_test_set.py
     name: analyze_test_set_cal
@@ -73,3 +79,9 @@ tasks:
       nb: "{{root}}/htmls/analyze_test_proteins_cal.html"
       indiv_prot_csv: "{{root}}/ml_outputs/cal_test_by_protein.csv"
       indiv_prot_plot: "{{root}}/ml_outputs/cal_test_plots/pred_by_proteins_all.png"
+    nbconvert_export_kwargs:
+      config:
+        HTMLExporter:
+          preprocessors: [nbconvert.preprocessors.TagRemovePreprocessor]
+        TagRemovePreprocessor:
+          remove_cell_tags: [dictionary]

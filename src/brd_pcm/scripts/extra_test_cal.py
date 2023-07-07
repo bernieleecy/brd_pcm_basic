@@ -25,11 +25,6 @@ logging.basicConfig(format="%(message)s")
 log = logging.getLogger()
 log.setLevel(logging.INFO)
 
-# fix random seed for reproducibility
-random_seed = 13579
-rng = np.random.RandomState(random_seed)
-log.info(f"Random seed: {random_seed}")
-
 # %% tags=["parameters"]
 upstream = None
 product = None
@@ -73,10 +68,8 @@ va_df.head()
 # %%
 # save predictions
 # make it more similar to the uncal_train.py output in terms of column names
-pred_df = all_data.loc[:, ["Canon_SMILES", "Protein"]]
+pred_df = all_data.loc[:, ["Canon_SMILES", "Protein", "Class"]]
 pred_df = pd.concat([pred_df, va_df], axis=1)
-pred_df = pred_df.rename(
-    columns={"True value": "Class", "avg_single_prob": "P (class 1)"}
-)
+pred_df = pred_df.rename(columns={"avg_single_prob": "P (class 1)"})
 
 pred_df.to_csv(product["predictions"], index=False)

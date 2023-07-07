@@ -1,5 +1,5 @@
 # %% [markdown]
-# This file is for training the model without calibration
+# This file is for cross-validation (uses the uncalibrated model)
 
 # %%
 import pickle
@@ -10,7 +10,7 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import StratifiedGroupKFold, cross_validate
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import roc_auc_score, make_scorer, recall_score
+from sklearn.metrics import make_scorer, recall_score
 
 # imblearn
 from imblearn import FunctionSampler

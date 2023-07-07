@@ -239,6 +239,8 @@ def run_CVAP(
         "amean_p1",
         "diff_p1_p0",
     ]
+    # set predicted values to int
+    test_preds["Predicted value"] = test_preds["Predicted value"].astype(int)
     return test_preds
 
 
@@ -326,4 +328,6 @@ def predict_CVAP(
         "amean_p1",
         "diff_p1_p0",
     ]
+    # set predicted values to int
+    test_preds["Predicted value"] = test_preds["Predicted value"].astype(int)
     return test_preds

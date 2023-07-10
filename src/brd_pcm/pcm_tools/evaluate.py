@@ -2,6 +2,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from rdkit import Chem
+from rdkit.Chem import AllChem
+from rdkit import DataStructs
 from sklearn.metrics import (
     roc_auc_score,
     recall_score,
@@ -17,6 +20,83 @@ from imblearn.metrics import geometric_mean_score
 import logging
 
 log = logging.getLogger(__name__)
+
+
+def find_similar_train_ligand(
+    train_df,
+    test_df,
+    smiles_col="Canon_SMILES",
+    radius=3,
+    nbits=1024,
+    chirality=True,
+    remove_dup=False,
+):
+    """Find the most similar train ligand to each test ligand.
+    By default, this checks every prediction, but I can turn on remove_dup to
+    only output unique test SMILES strings.
+
+    Args:
+        train_df (pd DataFrame): DataFrame with shape (n_samples, n_cols). Must
+            contain a column with ligand SMILES.
+        test_df (pd DataFrame): DataFrame with shape (n_samples, n_cols). Must
+            contain a column with ligand SMILES.
+        smiles_col (str): Name of column containing SMILES strings. Defaults to
+            "Canon_SMILES", assumed to be the same in both dfs.
+        radius (int): Radius of Morgan fingerprint. Defaults to 3.
+        nbits (int): Number of bits in Morgan fingerprint. Defaults to 1024.
+        chirality (bool): Whether to use chirality in Morgan fingerprint.
+            Defaults to True.
+        remove_dup (bool): Whether to remove duplicate test points. Defaults to
+            False.
+
+    Returns:
+        most_similar_df (pd DataFrame): DataFrame with shape (n_samples, 3).
+    """
+    unique_train_mols = [
+        Chem.MolFromSmiles(s, sanitize=True) for s in train_df[smiles_col].unique()
+    ]
+    # check every test point, even if it is a repeat
+    test_mols = [Chem.MolFromSmiles(s, sanitize=True) for s in test_df[smiles_col]]
+
+    train_fps = [
+        AllChem.GetMorganFingerprintAsBitVect(
+            m, radius=radius, nBits=nbits, useChirality=chirality
+        )
+        for m in unique_train_mols
+    ]
+    test_fps = [
+        AllChem.GetMorganFingerprintAsBitVect(
+            m, radius=radius, nBits=nbits, useChirality=chirality
+        )
+        for m in test_mols
+    ]
+
+    most_similar_data = []
+
+    for i, fp in enumerate(test_fps):
+        scores = DataStructs.BulkTanimotoSimilarity(fp, train_fps)
+        # get the index of the max score
+        max_score_idx = np.argmax(scores)
+        # get the max score
+        max_score = scores[max_score_idx]
+        # write test smi, train smi, max score, max score train point to df
+        most_similar_data.append(
+            [
+                test_df.iloc[i][smiles_col],
+                train_df[smiles_col].unique()[max_score_idx],
+                max_score,
+            ]
+        )
+
+    most_similar_df = pd.DataFrame(
+        most_similar_data,
+        columns=["Test SMILES", "Closest Train SMILES", "Tanimoto Similarity"],
+    )
+
+    if remove_dup:
+        most_similar_df = most_similar_df.drop_duplicates(subset=["Test SMILES"])
+
+    return most_similar_df
 
 
 def get_pr_auc(y_true, y_pred, pos_label=1):

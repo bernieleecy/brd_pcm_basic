@@ -23,3 +23,11 @@ tasks:
       y_train_data: "products/train/data/y_train.parquet"
       cv_data: "products/train/models/VA_cv_indices.pkl"
       model_folder: "products/train/models/cal_models"
+
+  - source: scripts/serve_analyze.py
+    upstream: [serve_cal]
+    product:
+      nb: "{{root}}/htmls/serve_analyze_cal.html"
+      similar_df: "{{root}}/ml_outputs/most_similar_train.csv"
+    params:
+      X_train_data: "products/train/data/X_train.parquet"

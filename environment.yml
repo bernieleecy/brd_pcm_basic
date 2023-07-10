@@ -17,3 +17,4 @@ dependencies:
     - scipy==1.8.1
     - ipywidgets==8.0.4
     - ploomber==0.22.4
+    - streamlit=1.24.1

@@ -239,7 +239,8 @@ def run_CVAP(
         "amean_p1",
         "diff_p1_p0",
     ]
-    # set predicted values to int
+    # set true and predicted values to int
+    test_preds["True value"] = test_preds["True value"].astype(int)
     test_preds["Predicted value"] = test_preds["Predicted value"].astype(int)
     return test_preds
 
@@ -318,9 +319,7 @@ def predict_CVAP(
     amean_p1 = np.mean(per_fold_p1, axis=1)
     diff_p1_p0 = amean_p1 - amean_p0
 
-    test_preds = pd.DataFrame(
-        [y_pred, avg_single, amean_p0, amean_p1, diff_p1_p0]
-    ).T
+    test_preds = pd.DataFrame([y_pred, avg_single, amean_p0, amean_p1, diff_p1_p0]).T
     test_preds.columns = [
         "Predicted value",
         "avg_single_prob",

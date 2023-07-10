@@ -16,11 +16,7 @@ def smi2img(smi):
     img = Draw.MolToImage(mol, size=(300, 300))  # Change size as needed
     return img
 
-df = pd.read_csv("cal_test_set_preds.csv")
-df["Class"] = df["Class"].astype("int")
-df["Predicted value"] = df["Predicted value"].astype("int")
-
-df["Correct"] = df["Class"] == df["Predicted value"]
+df = pd.read_csv("cal_test_set_preds_detailed.csv")
 
 # unique proteins, sorted alphabetically
 proteins = sorted(df["Protein"].unique())

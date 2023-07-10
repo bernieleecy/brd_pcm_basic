@@ -65,6 +65,19 @@ pipe_clf.fit(X_train, y_train)
 with bz2.open(product["model"], "wb") as f:
     pickle.dump(pipe_clf, f)
 
+# get feature names
+feature_names = pipe_clf.named_steps["preprocessing"].get_feature_names_out()
+# get discrete features
+discrete_feats = [feat.split("__")[-1] for feat in feature_names if "discrete" in feat]
+continuous_feats = [feat.split("__")[-1] for feat in feature_names if "continuous" in feat]
+log.info(discrete_feats[:5], len(discrete_feats))
+log.info(continuous_feats[:5], len(continuous_feats))
+
+with open(product["lig_feat_names"], "wb") as f:
+    pickle.dump(discrete_feats, f)
+with open(product["prot_feat_names"], "wb") as f:
+    pickle.dump(continuous_feats, f)
+
 # %%
 # Predict on test data
 y_pred = pipe_clf.predict(X_test)

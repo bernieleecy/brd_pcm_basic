@@ -15,6 +15,7 @@ from sklearn.metrics import (
     precision_recall_curve,
     auc,
 )
+from scipy.spatial.distance import cdist
 from imblearn.metrics import geometric_mean_score
 
 import logging
@@ -32,12 +33,13 @@ def find_similar_train_ligand(
     remove_dup=False,
 ):
     """Find the most similar train ligand to each test ligand.
-    By default, this checks every prediction, but I can turn on remove_dup to
-    only output unique test SMILES strings.
+    By default, this checks every prediction against unique train ligands, but
+    I can turn on remove_dup to only output unique test SMILES strings.
+    Because it uses unique train ligands, I can't attach class information.
 
     Args:
         train_df (pd DataFrame): DataFrame with shape (n_samples, n_cols). Must
-            contain a column with ligand SMILES.
+            contain a column with ligand SMILES and Class.
         test_df (pd DataFrame): DataFrame with shape (n_samples, n_cols). Must
             contain a column with ligand SMILES.
         smiles_col (str): Name of column containing SMILES strings. Defaults to

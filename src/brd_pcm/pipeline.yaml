@@ -27,6 +27,8 @@ tasks:
       nb: "{{root}}/htmls/train_uncal.html"
       model: "{{root}}/models/uncal_model.pkl.bz2"
       predictions: "{{root}}/ml_outputs/uncal_test_set_preds.csv"
+      lig_feat_names: "{{root}}/models/lig_feat_names.pkl"
+      prot_feat_names: "{{root}}/models/prot_feat_names.pkl"
 
   - source: scripts/cal_train.py
     upstream: [prep_train]
@@ -85,3 +87,12 @@ tasks:
           preprocessors: [nbconvert.preprocessors.TagRemovePreprocessor]
         TagRemovePreprocessor:
           remove_cell_tags: [dictionary]
+
+  - source: scripts/analyze_misclassified.py
+    name: analyze_misclassified
+    upstream: [cal_train]
+    product:
+      nb: "{{root}}/htmls/analyze_cal_misclassified.html"
+      data: "{{root}}/ml_outputs/cal_test_set_preds_detailed.csv"
+    params:
+      X_train_data: "{{root}}/data/X_train.parquet"

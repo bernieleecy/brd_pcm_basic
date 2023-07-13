@@ -1,0 +1,42 @@
+meta:
+  extract_upstream: false
+  source_loader:
+    module: brd_pcm
+
+tasks:
+  - source: scripts/clean.py
+    product:
+      nb: "{{root}}/htmls/clean.html"
+      data: "{{root}}/data/cleaned_data_init.csv"
+    params:
+      brd_data: "{{brd_data}}"
+      drop_sub_50: "{{drop_sub_50}}"
+      known_classes: "{{known_classes}}"
+      protein_file: "{{protein_feat_file}}"
+    on_finish: tests.quality.validate_protein_names
+
+  - source: scripts/find_fp_dups.py
+    upstream: [clean]
+    product:
+      nb: "{{root}}/htmls/find_fp_dups.html"
+      data: "{{root}}/data/cleaned_data_no_fp_dups.csv"
+      duplicates: "{{root}}/data/fp_duplicates.csv"
+
+  - source: brd_pcm.scripts.featurize_funcs.featurize_ligands
+    upstream: [find_fp_dups]
+    product:
+      data: "{{root}}/data/featurized_lig.parquet"
+
+  - source: brd_pcm.scripts.featurize_funcs.featurize_proteins
+    upstream: [find_fp_dups]
+    product:
+      data: "{{root}}/data/featurized_protein.parquet"
+    params:
+      protein_file: "{{protein_feat_file}}"
+
+  - source: brd_pcm.scripts.featurize_funcs.combine_features
+    upstream: [find_fp_dups, featurize_ligands, featurize_proteins]
+    product:
+      data: "{{root}}/data/featurized_data.parquet"
+    params:
+      known_classes: "{{known_classes}}"

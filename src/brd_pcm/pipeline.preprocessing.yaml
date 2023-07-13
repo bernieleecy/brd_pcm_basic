@@ -3,17 +3,25 @@
   product:
     nb: "{{root}}/htmls/clean.html"
     data: "{{root}}/data/cleaned_data_init.csv"
-    data_no_dups: "{{root}}/data/cleaned_data_no_fp_dups.csv"
-    duplicates: "{{root}}/data/fp_duplicates.csv"
   params:
     brd_data: "{{brd_data}}"
     drop_sub_50: "{{drop_sub_50}}"
     known_classes: "{{known_classes}}"
+    protein_file: "{{protein_feat_file}}"
+  on_finish: tests.quality.validate_protein_names
+
+- source: scripts/find_fp_dups.py
+  upstream: [clean]
+  product:
+    nb: "{{root}}/htmls/find_fp_dups.html"
+    data: "{{root}}/data/cleaned_data_no_fp_dups.csv"
+    duplicates: "{{root}}/data/fp_duplicates.csv"
 
 - source: scripts/featurize.py
-  upstream: [clean]
+  upstream: [find_fp_dups]
   product:
     nb: "{{root}}/htmls/featurize.html"
     data: "{{root}}/data/featurized_data.parquet"
   params:
     known_classes: "{{known_classes}}"
+    protein_file: "{{protein_feat_file}}"

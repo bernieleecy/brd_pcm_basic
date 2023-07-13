@@ -2,6 +2,7 @@
 # This file is for featurizing the data
 
 # %%
+from pathlib import Path
 import pandas as pd
 from brd_pcm.pcm_tools.data_prep import AddFeatures
 
@@ -9,21 +10,21 @@ from brd_pcm.pcm_tools.data_prep import AddFeatures
 upstream = None
 product = None
 known_classes = None
+protein_file = None
 
 # %%
 # Get the upstream name (assumes single upstream here)
 upstream_name = list(upstream)[0]
 # Load data and make separate dfs for ligand and protein features
 # Possible Morgan fingerprint duplicates already removed here
-data = pd.read_csv(str(upstream[upstream_name]["data_no_dups"]), index_col=0)
+data = pd.read_csv(str(upstream[upstream_name]["data"]), index_col=0)
 data_to_feat = data.loc[:,["Canon_SMILES", "Protein"]]
 
 # %%
 # Initialise the ligand featurizer
 ligand_descriptor = "ecfp"
 ligand_params = {"radius": 3, "nBits": 1024, "useChirality": True}
-protein_descriptor = "CKSAAGP"
-protein_file = f"protein_features/{protein_descriptor}.tsv"
+protein_descriptor = Path(protein_file).stem
 
 # %%
 # Initialise class for featurization

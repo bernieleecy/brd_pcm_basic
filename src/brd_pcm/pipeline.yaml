@@ -15,11 +15,21 @@ tasks:
       y_test: "{{root}}/data/y_test.parquet"
       imblearn_pipe: "{{root}}/models/imblearn_pipe_template.pkl"
 
-  - source: scripts/cross_validate.py
+  - source: brd_pcm.tasks.cross_val.cross_val
+    name: stratified_cv
     upstream: [prep_train]
     product:
-      nb: "{{root}}/htmls/cross_validate.html"
-      cross_val: "{{root}}/ml_outputs/cross_val_scores.csv"
+      cross_val: "{{root}}/ml_outputs/cv_strat_split.csv"
+    params:
+      type: "stratified"
+
+  - source: brd_pcm.tasks.cross_val.cross_val
+    name: random_cv
+    upstream: [prep_train]
+    product:
+      cross_val: "{{root}}/ml_outputs/cv_random_split.csv"
+    params:
+      type: "random"
 
   - source: scripts/uncal_train.py
     upstream: [prep_train]

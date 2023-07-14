@@ -83,7 +83,6 @@ def make_imblearn_pipe(
                 ("classify", train_clf),
             ],
             memory=cachedir,
-            verbose=True,
         )
     else:
         new_pipe = Pipeline(
@@ -93,7 +92,6 @@ def make_imblearn_pipe(
                 ("drop", drop_col),
                 ("classify", train_clf),
             ],
-            verbose=True,
         )
     return new_pipe
 

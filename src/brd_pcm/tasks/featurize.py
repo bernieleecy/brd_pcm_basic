@@ -4,6 +4,29 @@ from pathlib import Path
 import pandas as pd
 from molfeat.trans import MoleculeTransformer
 
+def get_protein_feats(data, protein_file):
+    # check if tsv or csv file
+    if protein_file.endswith(".tsv"):
+        load_protein_df = pd.read_csv(protein_file, sep="\t", index_col=0)
+    elif protein_file.endswith(".csv"):
+        load_protein_df = pd.read_csv(protein_file, index_col=0)
+    else:
+        raise ValueError("Protein file must be either in tsv or csv format")
+
+    # passing a set will be deprecated in the future, so convert to list
+    protein_set = list(set(data))
+    relevant_proteins = load_protein_df.loc[protein_set, :]
+
+    # merge data_to_feat and relevant_proteins, works because data_to_feat is a named
+    # series
+    # MUST state how="left", otherwise it gets sorted alphabetically and the
+    # combine_feats function has unexpected behaviour
+    protein_feats = pd.merge(
+        data, relevant_proteins, how="left", left_on="Protein", right_index=True
+    )
+    protein_feats = protein_feats.reset_index(drop=True)
+    return protein_feats
+
 
 def featurize_ligands(upstream, product):
     """Add features for the ligand
@@ -38,26 +61,8 @@ def featurize_proteins(upstream, product, protein_file):
     data = pd.read_csv(str(upstream[upstream_name]["data"]), index_col=0)
     data_to_feat = data.loc[:, "Protein"]
 
-    # check if tsv or csv file
-    if protein_file.endswith(".tsv"):
-        load_protein_df = pd.read_csv(protein_file, sep="\t", index_col=0)
-    elif protein_file.endswith(".csv"):
-        load_protein_df = pd.read_csv(protein_file, index_col=0)
-    else:
-        raise ValueError("Protein file must be either in tsv or csv format")
-
-    # passing a set will be deprecated in the future, so convert to list
-    protein_set = list(set(data_to_feat))
-    relevant_proteins = load_protein_df.loc[protein_set, :]
-
-    # merge data_to_feat and relevant_proteins, works because data_to_feat is a named
-    # series
-    # MUST state how="left", otherwise it gets sorted alphabetically and the
-    # combine_feats function has unexpected behaviour
-    protein_feats = pd.merge(
-        data_to_feat, relevant_proteins, how="left", left_on="Protein", right_index=True
-    )
-    protein_feats = protein_feats.reset_index(drop=True)
+    # get protein features
+    protein_feats = get_protein_feats(data_to_feat, protein_file)
 
     # save protein_feats as parquet file
     protein_feats.to_parquet(str(product["data"]))
@@ -66,6 +71,7 @@ def featurize_proteins(upstream, product, protein_file):
 def combine_features(upstream, product, known_classes):
     """Combine ligand and protein features
     Upstream is supplied as find_fp_dups, featurize_ligands, then featurize_protein
+    Expects parquet files for ligand and protein features
     """
     base_df = pd.read_csv(str(upstream["find_fp_dups"]["data"]))
     ligand_df = pd.read_parquet(str(upstream["featurize_ligands"]["data"]))
@@ -93,6 +99,34 @@ def combine_features(upstream, product, known_classes):
     merged_df = pd.concat([merged_df, ligand_df, protein_df], axis=1)
 
     print(merged_df.head())
+
+    # save merged_df as parquet file
+    merged_df.to_parquet(str(product["data"]))
+
+
+def enter_from_fps(product, fp_data, protein_file):
+    """For entering a pipeline starting from ligand fps + protein names
+    Only applicable during model serving"""
+
+    data = pd.read_parquet(fp_data)
+
+    # check for Protein column
+    if "Protein" not in data.columns:
+        raise ValueError("Protein column not found in fp_data")
+
+    data_to_feat = data.loc[:, "Protein"]
+
+    # get protein features
+    protein_feats = get_protein_feats(data_to_feat, protein_file)
+
+    # combine with ligand feats now
+    if not data["Protein"].equals(protein_feats["Protein"]):
+        raise ValueError(
+            "Order of protein features was not retained during featurization"
+        )
+    # combine all except the Protein column from protein_feats
+    protein_feats = protein_feats.drop(columns=["Protein"])
+    merged_df = pd.concat([data, protein_feats], axis=1)
 
     # save merged_df as parquet file
     merged_df.to_parquet(str(product["data"]))

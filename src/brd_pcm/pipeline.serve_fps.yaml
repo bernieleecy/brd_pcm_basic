@@ -1,12 +1,18 @@
 meta:
-  import_tasks_from: pipeline.preprocess.yaml
   extract_upstream: false
   source_loader:
     module: brd_pcm
 
 tasks:
+  - source: brd_pcm.tasks.featurize.enter_from_fps
+    product:
+      data: "{{root}}/data/featurized_data.parquet"
+    params:
+      fp_data: "{{brd_data}}"
+      protein_file: "{{protein_feat_file}}"
+
   - source: brd_pcm.tasks.serve.serve_uncal
-    upstream: [combine_features]
+    upstream: [enter_from_fps]
     product:
       predictions: "{{root}}/ml_outputs/uncal_preds.csv"
     params:
@@ -14,7 +20,7 @@ tasks:
       from_fps: "{{from_fps}}"
 
   - source: brd_pcm.tasks.serve.serve_cal
-    upstream: [combine_features]
+    upstream: [enter_from_fps]
     product:
       predictions: "{{root}}/ml_outputs/cal_preds.csv"
     params:
@@ -23,11 +29,3 @@ tasks:
       cv_data: "products/train/models/VA_cv_indices.pkl"
       model_folder: "products/train/models/cal_models"
       from_fps: "{{from_fps}}"
-
-  - source: scripts/serve_analyze.py
-    upstream: [serve_cal]
-    product:
-      nb: "{{root}}/htmls/serve_analyze_cal.html"
-      similar_df: "{{root}}/ml_outputs/most_similar_train.csv"
-    params:
-      X_train_data: "products/train/data/X_train.parquet"

@@ -1,12 +1,12 @@
 meta:
-  import_tasks_from: pipeline.preprocessing.yaml
+  import_tasks_from: pipeline.preprocess.yaml
   extract_upstream: false
   source_loader:
     module: brd_pcm
 
 tasks:
   - source: scripts/extra_test_uncal.py
-    upstream: [featurize]
+    upstream: [combine_features]
     product:
       nb: "{{root}}/htmls/extra_test_uncal.html"
       predictions: "{{root}}/ml_outputs/uncal_preds.csv"
@@ -14,7 +14,7 @@ tasks:
       path_to_model: "products/train/models/uncal_model.pkl.bz2"
 
   - source: scripts/extra_test_cal.py
-    upstream: [featurize]
+    upstream: [combine_features]
     product:
       nb: "{{root}}/htmls/extra_test_cal.html"
       predictions: "{{root}}/ml_outputs/cal_preds.csv"

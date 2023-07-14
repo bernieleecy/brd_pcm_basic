@@ -23,3 +23,8 @@ Training pipeline is in `src/brd_pcm/pipeline.yaml`, serving pipeline is in `src
 There is an additional pipeline for running extra test sets (only relevant during development) called `pipeline.extra_test.yaml`.
 
 All the pipelines share the `pipeline.preprocessing.yaml` code.
+
+# Notes on data
+
+During model training, the order of the input data is NOT changed during cleaning and featurization
+* Changing the order (e.g. reordering alphabetically by Protein name) can and will break the code

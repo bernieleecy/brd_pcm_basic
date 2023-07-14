@@ -1,12 +1,12 @@
 meta:
-  import_tasks_from: pipeline.preprocessing.yaml
+  import_tasks_from: pipeline.preprocess.yaml
   extract_upstream: false
   source_loader:
     module: brd_pcm
 
 tasks:
   - source: scripts/prep_train.py
-    upstream: [featurize]
+    upstream: [combine_features]
     product:
       nb: "{{root}}/htmls/prep_train.html"
       X_train: "{{root}}/data/X_train.parquet"

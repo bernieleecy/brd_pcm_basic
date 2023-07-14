@@ -1,7 +1,5 @@
-# %% [markdown]
-# This file is for featurizing the data
+# for adding ligand and protein features
 
-# %%
 from pathlib import Path
 import pandas as pd
 from molfeat.trans import MoleculeTransformer
@@ -54,8 +52,10 @@ def featurize_proteins(upstream, product, protein_file):
 
     # merge data_to_feat and relevant_proteins, works because data_to_feat is a named
     # series
+    # MUST state how="left", otherwise it gets sorted alphabetically and the
+    # combine_feats function has unexpected behaviour
     protein_feats = pd.merge(
-        data_to_feat, relevant_proteins, left_on="Protein", right_index=True
+        data_to_feat, relevant_proteins, how="left", left_on="Protein", right_index=True
     )
     protein_feats = protein_feats.reset_index(drop=True)
 
@@ -71,17 +71,26 @@ def combine_features(upstream, product, known_classes):
     ligand_df = pd.read_parquet(str(upstream["featurize_ligands"]["data"]))
     protein_df = pd.read_parquet(str(upstream["featurize_proteins"]["data"]))
 
+    # check that the order is the same in base_df and the new_dfs
+    if not base_df["Canon_SMILES"].equals(ligand_df["Canon_SMILES"]):
+        raise ValueError(
+            "Order of ligand features was not retained during featurization"
+        )
+    if not base_df["Protein"].equals(protein_df["Protein"]):
+        raise ValueError(
+            "Order of protein features was not retained during featurization"
+        )
+
     # some massaging of data to aid inspection
     smiles_col = ligand_df.loc[:, "Canon_SMILES"]
     ligand_df = ligand_df.drop(columns=["Canon_SMILES"])
     protein_col = protein_df.loc[:, "Protein"]
     protein_df = protein_df.drop(columns=["Protein"])
 
-    # merge the two dataframes
-    merged_df = pd.concat([smiles_col, protein_col, ligand_df, protein_df], axis=1)
-
+    merged_df = pd.concat([smiles_col, protein_col], axis=1)
     if known_classes:
-        merged_df["Class"] = base_df["Class"]
+        merged_df["Class"] = base_df["Class"].values
+    merged_df = pd.concat([merged_df, ligand_df, protein_df], axis=1)
 
     print(merged_df.head())
 

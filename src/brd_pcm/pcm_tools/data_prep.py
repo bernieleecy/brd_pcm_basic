@@ -100,6 +100,7 @@ class AddFeatures:
 
     def combine_feats(self):
         """Combines ligand and protein features.
+        Meging with how="left" is critical for preserving order
 
         Returns:
             pd DataFrame: DataFrame with shape (n_samples, n_cols).
@@ -198,7 +199,7 @@ class SplitData:
         else:
             sgkf = StratifiedGroupKFold(n_splits=n_splits)
         train_idx, test_idx = next(
-            sgkf.split(self.X_data, self.protein_class, self.X_data["Murcko_SMILES"])
+            sgkf.split(self.X_data[smiles_col], self.protein_class, self.X_data["Murcko_SMILES"])
         )
         self.X_train = self.X_data.loc[train_idx]
         self.X_test = self.X_data.loc[test_idx]

@@ -3,10 +3,13 @@
 Using a ploomber pipeline to wrap the different steps of the BRD classifier work into a more reproducible format.
 
 While developing this pipeline, to get reproducibility (i.e. exact values that I obtained while prototyping), had to install dependencies via conda-forge. 
+This only works on my M1 mac, it failed on my intel mac.
 
 ```
-conda env create -n test_ploomber -f environment.yml
+conda env create -n test_ploomber -f environment.dev.yml
 ```
+
+There's also an environment.yml file with less strict versions.
 
 After installing the dependencies, the packaged pipeline MUST be installed with:
 ```

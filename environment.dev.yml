@@ -1,0 +1,21 @@
+name: test_ploomber
+channels:
+  - conda-forge
+dependencies:
+  - black=23.1.0=py310hbe9552e_0
+  - matplotlib=3.6.3=py310hb6292c7_0
+  - molfeat=0.8.6=pyhd8ed1ab_0
+  - numpy=1.23.2=py310h127c7cf_0
+  - pandas=1.5.3=py310h2b830bf_0
+  - python=3.10.8=hf452327_0_cpython
+  - scikit-learn=1.2.2=py310h98c5782_1
+  - seaborn=0.12.2=hd8ed1ab_0
+  - pip
+  - pip:
+    - imbalanced-learn==0.10.1
+    - rdkit==2022.9.4
+    - scipy==1.8.1
+    - ipywidgets==8.0.4
+    - ploomber==0.22.4
+    - streamlit=1.24.1
+    - mols2grid=1.1.1

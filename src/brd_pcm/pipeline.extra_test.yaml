@@ -39,3 +39,12 @@ tasks:
       nb: "{{root}}/htmls/extra_test_analyze_cal.html"
       cmat: "{{root}}/ml_outputs/cal_plots/cal_cmat.png"
       conf_metrics: "{{root}}/ml_outputs/cal_cmetrics.csv"
+
+  - source: scripts/analyze_misclassified.py
+    name: analyze_misclassified
+    upstream: [extra_test_cal]
+    product:
+      nb: "{{root}}/htmls/analyze_cal_misclassified.html"
+      data: "{{root}}/ml_outputs/cal_test_set_preds_detailed.csv"
+    params:
+      X_train_data: "products/train/data/X_train.parquet"

@@ -28,6 +28,6 @@ tasks:
     upstream: [serve_cal]
     product:
       nb: "{{root}}/htmls/serve_analyze_cal.html"
-      similar_df: "{{root}}/ml_outputs/most_similar_train.csv"
+      similar_df: "{{root}}/ml_outputs/cal_preds_detailed.csv"
     params:
       X_train_data: "products/train/data/X_train.parquet"

@@ -176,8 +176,8 @@ if "df_test" in st.session_state:
             # if misclassfied, print
             if not row["Correct"]:
                 col3.markdown(f":red[**MISCLASSIFIED!**]")
-            col3.write(f"True: {row['Class']}")
-            col3.write(f"Predicted: {row['Predicted value']} ({row['P (class 1)']:.3f})")
+            col3.write(f"True val: {row['Class']}")
+            col3.write(f"Predicted val: {row['Predicted value']} ({row['P (class 1)']:.3f})")
             col3.write(f"VA interval: {row['diff_p1_p0']:.3f}")
             col3.write(f"Closest train Tanimoto: {row['Tanimoto Similarity']:.3f}")
             col3.write(f"{class_protein}")

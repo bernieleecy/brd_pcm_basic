@@ -3,15 +3,14 @@
 from pathlib import Path
 import pandas as pd
 from molfeat.trans import MoleculeTransformer
+from importlib.resources import files
 
 def get_protein_feats(data, protein_file):
-    # check if tsv or csv file
-    if protein_file.endswith(".tsv"):
+    # file must be in .tsv format at the moment
+    if str(protein_file).endswith(".tsv"):
         load_protein_df = pd.read_csv(protein_file, sep="\t", index_col=0)
-    elif protein_file.endswith(".csv"):
-        load_protein_df = pd.read_csv(protein_file, index_col=0)
     else:
-        raise ValueError("Protein file must be either in tsv or csv format")
+        raise ValueError("Protein file must be either in tsv format")
 
     # passing a set will be deprecated in the future, so convert to list
     protein_set = list(set(data))
@@ -52,17 +51,21 @@ def featurize_ligands(upstream, product):
     lig_feats.to_parquet(product["data"])
 
 
-def featurize_proteins(upstream, product, protein_file):
+def featurize_proteins(upstream, product, protein_descriptor):
     """Add features for the protein
     Class information is not retained here"""
 
     upstream_name = list(upstream)[0]
-    protein_descriptor = Path(protein_file).stem
+    protein_file = files("brd_pcm.resources.brd_feats").joinpath(f"{protein_descriptor}.tsv")
+
     data = pd.read_csv(str(upstream[upstream_name]["data"]), index_col=0)
     data_to_feat = data.loc[:, "Protein"]
 
     # get protein features
-    protein_feats = get_protein_feats(data_to_feat, protein_file)
+    if protein_file.exists():
+        protein_feats = get_protein_feats(data_to_feat, protein_file)
+    else:
+        raise FileNotFoundError("Protein descriptor file not found")
 
     # save protein_feats as parquet file
     protein_feats.to_parquet(str(product["data"]))
@@ -104,7 +107,7 @@ def combine_features(upstream, product, known_classes):
     merged_df.to_parquet(str(product["data"]))
 
 
-def enter_from_fps(product, fp_data, protein_file):
+def enter_from_fps(product, fp_data, protein_descriptor):
     """For entering a pipeline starting from ligand fps + protein names
     Only applicable during model serving"""
 
@@ -117,7 +120,11 @@ def enter_from_fps(product, fp_data, protein_file):
     data_to_feat = data.loc[:, "Protein"]
 
     # get protein features
-    protein_feats = get_protein_feats(data_to_feat, protein_file)
+    protein_file = files("brd_pcm.resources.brd_feats").joinpath(f"{protein_descriptor}.tsv")
+    if protein_file.exists():
+        protein_feats = get_protein_feats(data_to_feat, protein_file)
+    else:
+        raise FileNotFoundError("Protein descriptor file not found")
 
     # combine with ligand feats now
     if not data["Protein"].equals(protein_feats["Protein"]):

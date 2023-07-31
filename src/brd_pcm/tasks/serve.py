@@ -32,7 +32,8 @@ def serve_uncal(upstream, product, path_to_model, from_fps=False):
     if not from_fps:
         pcm_data = all_data.drop(columns=["Canon_SMILES"])
     else:
-        pcm_data = all_data.copy()
+        # make compatible w/ UCLA data
+        pcm_data = all_data.drop(columns=["Running number"])
 
     # load the model
     with bz2.open(path_to_model, "rb") as f:
@@ -45,7 +46,7 @@ def serve_uncal(upstream, product, path_to_model, from_fps=False):
     # save predictions
     if from_fps:
         # loc-ing in this way gives a dataframe rather than a series
-        pred_df = all_data.loc[:, ["Protein"]]
+        pred_df = all_data.loc[:, ["Running number", "Protein"]]
     else:
         pred_df = all_data.loc[:, ["Canon_SMILES", "Protein"]]
     pred_df["Predicted value"] = y_pred
@@ -76,7 +77,7 @@ def serve_cal(
         pcm_data = all_data.drop(columns=["Canon_SMILES"])
         X_train = X_train.drop(columns=["Canon_SMILES", "Murcko_SMILES"])
     else:
-        pcm_data = all_data.copy()
+        pcm_data = all_data.drop(columns=["Running number"])
 
     # load the cross-validation indices
     with open(cv_data, "rb") as f:
@@ -95,7 +96,7 @@ def serve_cal(
     # make it more similar to the uncal_train.py output in terms of column names
     if from_fps:
         # loc-ing in this way gives a dataframe rather than a series
-        pred_df = all_data.loc[:, ["Protein"]]
+        pred_df = all_data.loc[:, ["Running number", "Protein"]]
     else:
         pred_df = all_data.loc[:, ["Canon_SMILES", "Protein"]]
     pred_df = pd.concat([pred_df, va_df], axis=1)

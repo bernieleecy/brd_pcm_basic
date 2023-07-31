@@ -1,9 +1,10 @@
 import pandas as pd
-import pkgutil
+from importlib.resources import files
 
 def validate_protein_names(product, params):
     """Check that protein names match expectations"""
-    valid_proteins = pd.read_csv(params["protein_file"], sep="\t", index_col=0).index.tolist()
+    valid_file = files("brd_pcm.resources").joinpath("valid_proteins.csv")
+    valid_proteins = pd.read_csv(valid_file,index_col=0).index.tolist()
     df = pd.read_csv(product["data"], index_col=0)
     protein_names = df["Protein"].unique()
 

@@ -3,26 +3,32 @@ meta:
   source_loader:
     module: brd_pcm
 
+executor:
+  dotted_path: ploomber.executors.Serial
+  build_in_subprocess: false # do not run function tasks in a subprocess, as this causes joblib issues
+
 tasks:
   - source: brd_pcm.tasks.featurize.enter_from_fps
     product:
       data: "{{root}}/data/featurized_data.parquet"
     params:
       fp_data: "{{brd_data}}"
-      protein_file: "{{protein_feat_file}}"
+      protein_descriptor: "{{protein_descriptor}}"
 
-  - source: brd_pcm.tasks.serve.serve_uncal
+  - source: scripts/serve_uncal.py
     upstream: [enter_from_fps]
     product:
-      predictions: "{{root}}/ml_outputs/uncal_preds.csv"
+      nb: "{{root}}/htmls/serve_uncal.html"
+      predictions: "{{root}}/ml_outputs/uncal_preds.parquet"
     params:
       path_to_model: "products/train/models/uncal_model.pkl.bz2"
       from_fps: "{{from_fps}}"
 
-  - source: brd_pcm.tasks.serve.serve_cal
+  - source: scripts/serve_cal.py
     upstream: [enter_from_fps]
     product:
-      predictions: "{{root}}/ml_outputs/cal_preds.csv"
+      nb: "{{root}}/htmls/serve_cal.html"
+      predictions: "{{root}}/ml_outputs/cal_preds.parquet"
     params:
       X_train_data: "products/train/data/X_train.parquet"
       y_train_data: "products/train/data/y_train.parquet"

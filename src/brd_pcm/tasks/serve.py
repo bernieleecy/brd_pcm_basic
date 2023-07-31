@@ -53,7 +53,10 @@ def serve_uncal(upstream, product, path_to_model, from_fps=False):
     pred_df["P (class 0)"] = y_pred_proba[:, 0]
     pred_df["P (class 1)"] = y_pred_proba[:, 1]
 
-    pred_df.to_csv(product["predictions"], index=False)
+    if str(product["predictions"]).endswith(".parquet"):
+        pred_df.to_parquet(product["predictions"])
+    else:
+        pred_df.to_csv(product["predictions"], index=False)
 
 
 def serve_cal(
@@ -69,13 +72,13 @@ def serve_cal(
 
     # load the X_train and y_train data (required to set up calibration)
     X_train = pd.read_parquet(X_train_data)
+    X_train = X_train.drop(columns=["Canon_SMILES", "Murcko_SMILES"])
     y_train = pd.read_parquet(y_train_data)
     y_train = y_train.squeeze()
 
     # remove unneeded columns
     if not from_fps:
         pcm_data = all_data.drop(columns=["Canon_SMILES"])
-        X_train = X_train.drop(columns=["Canon_SMILES", "Murcko_SMILES"])
     else:
         pcm_data = all_data.drop(columns=["Running number"])
 
@@ -102,4 +105,7 @@ def serve_cal(
     pred_df = pd.concat([pred_df, va_df], axis=1)
     pred_df = pred_df.rename(columns={"avg_single_prob": "P (class 1)"})
 
-    pred_df.to_csv(product["predictions"], index=False)
+    if str(product["predictions"]).endswith(".parquet"):
+        pred_df.to_parquet(product["predictions"])
+    else:
+        pred_df.to_csv(product["predictions"], index=False)

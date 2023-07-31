@@ -10,6 +10,9 @@
 *.html
 *.bz2
 
+# do not include shell scripts used to run pipelines repeatedly
+run_ucla_lib.sh
+
 # Exclude everything in the inputs/ and products/ folders
 inputs/
 products/

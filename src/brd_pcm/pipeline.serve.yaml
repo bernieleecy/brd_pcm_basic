@@ -5,17 +5,19 @@ meta:
     module: brd_pcm
 
 tasks:
-  - source: brd_pcm.tasks.serve.serve_uncal
+  - source: scripts/serve_uncal.py
     upstream: [combine_features]
     product:
+      nb: "{{root}}/htmls/serve_uncal.html"
       predictions: "{{root}}/ml_outputs/uncal_preds.csv"
     params:
       path_to_model: "products/train/models/uncal_model.pkl.bz2"
       from_fps: "{{from_fps}}"
 
-  - source: brd_pcm.tasks.serve.serve_cal
+  - source: scripts/serve_cal.py
     upstream: [combine_features]
     product:
+      nb: "{{root}}/htmls/serve_cal.html"
       predictions: "{{root}}/ml_outputs/cal_preds.csv"
     params:
       X_train_data: "products/train/data/X_train.parquet"

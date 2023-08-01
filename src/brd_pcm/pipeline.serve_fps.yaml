@@ -31,3 +31,24 @@ tasks:
       cv_data: "products/train/models/VA_cv_indices.pkl"
       model_folder: "products/train/models/cal_models"
       from_fps: "{{from_fps}}"
+
+  - source: scripts/serve_process_fps.py
+    upstream: [serve_cal]
+    product:
+      nb: "{{root}}/htmls/serve_cal_process_results.html"
+      similar_df: "{{root}}/ml_outputs/cal_preds_detailed.parquet"
+    params:
+      X_train_data: "products/train/data/X_train.parquet"
+      X_test_data: "products/train/data/X_test.parquet"
+      fp_data: "{{brd_data}}"
+
+  - source: scripts/serve_select_fps.py
+    upstream: [serve_process_fps]
+    product:
+      nb: "{{root}}/htmls/serve_select_fps.html"
+      proposed: "{{root}}/ml_outputs/proposed_screen.md"
+    params:
+      X_train_data: "products/train/data/X_train.parquet"
+      y_train_data: "products/train/data/y_train.parquet"
+      X_test_data: "products/train/data/X_test.parquet"
+      y_test_data: "products/train/data/y_test.parquet"

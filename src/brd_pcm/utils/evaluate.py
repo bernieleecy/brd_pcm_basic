@@ -101,6 +101,78 @@ def find_similar_train_ligand(
     return most_similar_df
 
 
+def find_similar_train_ligand_fps(
+    train_df,
+    test_df,
+    smiles_col="Canon_SMILES",
+    radius=3,
+    nbits=1024,
+    chirality=True,
+):
+    """Find the most similar train ligand to each test ligand.
+    This version is for use when only the test fingerprints are available (i.e. no
+    SMILES data).
+    Because it uses unique train ligands, I can't attach class information.
+
+    Args:
+        train_df (pd DataFrame): DataFrame with shape (n_samples, n_cols). Must
+            contain a column with ligand SMILES and Class.
+        test_df (pd DataFrame): DataFrame with shape (n_samples, n_cols). Contains
+            ligand fingerprints.
+        smiles_col (str): Name of column containing SMILES strings. Defaults to
+            "Canon_SMILES", assumed to be the same in both dfs.
+        radius (int): Radius of Morgan fingerprint. Defaults to 3.
+        nbits (int): Number of bits in Morgan fingerprint. Defaults to 1024.
+        chirality (bool): Whether to use chirality in Morgan fingerprint.
+            Defaults to True.
+        remove_dup (bool): Whether to remove duplicate test points. Defaults to
+            False.
+
+    Returns:
+        most_similar_df (pd DataFrame): DataFrame with shape (n_samples, 3).
+    """
+    unique_train_mols = [
+        Chem.MolFromSmiles(s, sanitize=True) for s in train_df[smiles_col].unique()
+    ]
+    train_fps = [
+        AllChem.GetMorganFingerprintAsBitVect(
+            m, radius=radius, nBits=nbits, useChirality=chirality
+        )
+        for m in unique_train_mols
+    ]
+
+    fp_cols = [str(i) for i in range(nbits)]
+    test_fps = test_df.loc[:, fp_cols].to_numpy()
+
+    most_similar_data = []
+
+    for i, fp in enumerate(test_fps):
+        # convert test fps to explictbitvect
+        # based on https://iwatobipen.wordpress.com/2019/02/08/convert-fingerprint-to-numpy-array-and-conver-numpy-array-to-fingerprint-rdkit-memorandum/
+        fp_str = "".join(fp.astype(str))
+        test_fp = DataStructs.cDataStructs.CreateFromBitString(fp_str)
+        scores = DataStructs.BulkTanimotoSimilarity(test_fp, train_fps)
+        # get the index of the max score
+        max_score_idx = np.argmax(scores)
+        # get the max score
+        max_score = scores[max_score_idx]
+        # get closest train smiles and max score
+        most_similar_data.append(
+            [
+                train_df[smiles_col].unique()[max_score_idx],
+                max_score,
+            ]
+        )
+
+    # no test SMILES here
+    most_similar_df = pd.DataFrame(
+        most_similar_data,
+        columns=["Closest Train SMILES", "Tanimoto Similarity"],
+    )
+
+    return most_similar_df
+
+
 def get_pr_auc(y_true, y_pred, pos_label=1):
     """Get the precision-recall AUC.
 

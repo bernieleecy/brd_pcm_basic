@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from brd_pcm.pcm_tools.evaluate import (
+from brd_pcm.utils.evaluate import (
     get_key_cmetrics,
     get_by_protein_preds,
     plot_by_protein_preds,

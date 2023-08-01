@@ -10,7 +10,7 @@ import seaborn as sns
 
 from sklearn.preprocessing import MinMaxScaler
 
-from brd_pcm.pcm_tools.evaluate import find_similar_train_ligand
+from brd_pcm.utils.evaluate import find_similar_train_ligand
 
 # logging
 import logging

@@ -18,7 +18,7 @@ from imblearn import FunctionSampler
 from imblearn.pipeline import Pipeline
 
 # custom functions
-from brd_pcm.pcm_tools.ml import ros_by_protein_class, run_CVAP
+from brd_pcm.utils.ml import ros_by_protein_class, run_CVAP
 
 # logging
 import logging

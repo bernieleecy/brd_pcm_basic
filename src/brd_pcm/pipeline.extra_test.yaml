@@ -40,7 +40,7 @@ tasks:
       cmat: "{{root}}/ml_outputs/cal_plots/cal_cmat.png"
       conf_metrics: "{{root}}/ml_outputs/cal_cmetrics.csv"
 
-  - source: scripts/analyze_misclassified.py
+  - source: scripts/train_analyze_misclassified.py
     name: analyze_misclassified
     upstream: [extra_test_cal]
     product:

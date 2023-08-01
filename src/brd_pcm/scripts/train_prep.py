@@ -19,8 +19,8 @@ from imblearn import FunctionSampler
 from imblearn.pipeline import Pipeline
 
 # custom functions
-from brd_pcm.pcm_tools.data_prep import SplitData
-from brd_pcm.pcm_tools.ml import make_imblearn_pipe, ros_by_protein_class
+from brd_pcm.utils.data_prep import SplitData
+from brd_pcm.utils.ml import make_imblearn_pipe, ros_by_protein_class
 
 # logging
 import logging

@@ -11,7 +11,7 @@ import seaborn as sns
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.metrics import classification_report
 
-from brd_pcm.pcm_tools.evaluate import get_key_cmetrics, find_similar_train_ligand
+from brd_pcm.utils.evaluate import get_key_cmetrics, find_similar_train_ligand
 
 # logging
 import logging

@@ -145,6 +145,9 @@ def run_CVAP(
     clf_outdir=None,
 ):
     """Function to run cross venn-abers predictions on test set
+    Based partially on
+    https://github.com/valeman/Multi-class-probabilistic-classification (although this
+    function is for binary classification only)
 
     Args:
         X_train (pd DataFrame): DataFrame containing training data (with features).

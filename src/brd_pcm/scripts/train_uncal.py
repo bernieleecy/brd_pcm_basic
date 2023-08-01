@@ -55,7 +55,7 @@ y_test = y_test.squeeze()
 
 # %%
 # load pickled imblearn pipeline (unfitted)
-with open(upstream["prep_train"]["imblearn_pipe"], "rb") as f:
+with open(upstream[upstream_name]["imblearn_pipe"], "rb") as f:
     pipe_clf = pickle.load(f)
 
 # %%

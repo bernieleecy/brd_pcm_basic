@@ -33,7 +33,7 @@ rng = np.random.RandomState(random_seed)
 log.info(f"Random seed: {random_seed}")
 
 # %% tags=["parameters"]
-upstream = ["prep_train"]
+upstream = None
 product = None
 
 # %%
@@ -57,7 +57,7 @@ y_test = y_test.squeeze()
 
 # %%
 # load pickled imblearn pipeline (unfitted)
-with open(upstream["prep_train"]["imblearn_pipe"], "rb") as f:
+with open(upstream[upstream_name]["imblearn_pipe"], "rb") as f:
     pipe_clf = pickle.load(f)
 
 # %%

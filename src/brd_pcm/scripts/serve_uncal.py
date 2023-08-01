@@ -53,7 +53,7 @@ y_pred = model.predict(pcm_data)
 y_pred_proba = model.predict_proba(pcm_data)
 
 # %%
-# save predictions
+# format predictions
 if from_fps:
     # loc-ing in this way gives a dataframe rather than a series
     pred_df = all_data.loc[:, ["Running number", "Protein"]]
@@ -63,6 +63,12 @@ pred_df["Predicted value"] = y_pred
 pred_df["P (class 0)"] = y_pred_proba[:, 0]
 pred_df["P (class 1)"] = y_pred_proba[:, 1]
 
+# %%
+# look at df
+pred_df.head()
+
+# %%
+# save predictions
 if str(product["predictions"]).endswith(".parquet"):
     pred_df.to_parquet(product["predictions"])
 else:

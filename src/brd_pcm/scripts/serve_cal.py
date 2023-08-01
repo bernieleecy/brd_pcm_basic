@@ -72,7 +72,7 @@ va_df = predict_CVAP(
 va_df.head()
 
 # %%
-# save predictions
+# format predictions
 # make it more similar to the uncal_train.py output in terms of column names
 if from_fps:
     # loc-ing in this way gives a dataframe rather than a series
@@ -82,6 +82,12 @@ else:
 pred_df = pd.concat([pred_df, va_df], axis=1)
 pred_df = pred_df.rename(columns={"avg_single_prob": "P (class 1)"})
 
+# %%
+# look at df
+pred_df.head()
+
+# %%
+# save predictions
 if str(product["predictions"]).endswith(".parquet"):
     pred_df.to_parquet(product["predictions"])
 else:

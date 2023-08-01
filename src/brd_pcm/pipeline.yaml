@@ -9,10 +9,10 @@ executor:
   build_in_subprocess: false # do not run function tasks in a subprocess, as this causes joblib issues
 
 tasks:
-  - source: scripts/prep_train.py
+  - source: scripts/train_prep.py
     upstream: [combine_features]
     product:
-      nb: "{{root}}/htmls/prep_train.html"
+      nb: "{{root}}/htmls/train_prep.html"
       X_train: "{{root}}/data/X_train.parquet"
       y_train: "{{root}}/data/y_train.parquet"
       X_test: "{{root}}/data/X_test.parquet"
@@ -21,7 +21,7 @@ tasks:
 
   - source: brd_pcm.tasks.cross_val.cross_val
     name: stratified_cv
-    upstream: [prep_train]
+    upstream: [train_prep]
     product:
       cross_val: "{{root}}/ml_outputs/cv_strat_split.csv"
     params:
@@ -29,14 +29,14 @@ tasks:
 
   - source: brd_pcm.tasks.cross_val.cross_val
     name: random_cv
-    upstream: [prep_train]
+    upstream: [train_prep]
     product:
       cross_val: "{{root}}/ml_outputs/cv_random_split.csv"
     params:
       type: "random"
 
-  - source: scripts/uncal_train.py
-    upstream: [prep_train]
+  - source: scripts/train_uncal.py
+    upstream: [train_prep]
     product:
       nb: "{{root}}/htmls/train_uncal.html"
       model: "{{root}}/models/uncal_model.pkl.bz2"
@@ -44,17 +44,17 @@ tasks:
       lig_feat_names: "{{root}}/models/lig_feat_names.pkl"
       prot_feat_names: "{{root}}/models/prot_feat_names.pkl"
 
-  - source: scripts/cal_train.py
-    upstream: [prep_train]
+  - source: scripts/train_cal.py
+    upstream: [train_prep]
     product:
       nb: "{{root}}/htmls/train_cal.html"
       model: "{{root}}/models/cal_models"
       predictions: "{{root}}/ml_outputs/cal_test_set_preds.csv"
       cv_indices: "{{root}}/models/VA_cv_indices.pkl"
 
-  - source: scripts/analyze_test_set.py
+  - source: scripts/train_analyze_test_set.py
     name: analyze_test_set_uncal
-    upstream: [uncal_train]
+    upstream: [train_uncal]
     product:
       nb: "{{root}}/htmls/analyze_test_set_uncal.html"
       roc_curve: "{{root}}/ml_outputs/uncal_test_plots/roc_curve.png"
@@ -63,9 +63,9 @@ tasks:
       conf_metrics: "{{root}}/ml_outputs/uncal_test_cmetrics.csv"
       cal_curve: "{{root}}/ml_outputs/uncal_test_plots/calibration_curve.png"
 
-  - source: scripts/analyze_test_proteins.py
+  - source: scripts/train_analyze_test_proteins.py
     name: analyze_test_proteins_uncal
-    upstream: [uncal_train]
+    upstream: [train_uncal]
     product:
       nb: "{{root}}/htmls/analyze_test_proteins_uncal.html"
       indiv_prot_csv: "{{root}}/ml_outputs/uncal_test_by_protein.csv"
@@ -77,9 +77,9 @@ tasks:
         TagRemovePreprocessor:
           remove_cell_tags: [dictionary]
 
-  - source: scripts/analyze_test_set.py
+  - source: scripts/train_analyze_test_set.py
     name: analyze_test_set_cal
-    upstream: [cal_train]
+    upstream: [train_cal]
     product:
       nb: "{{root}}/htmls/analyze_test_set_cal.html"
       roc_curve: "{{root}}/ml_outputs/cal_test_plots/roc_curve.png"
@@ -88,9 +88,9 @@ tasks:
       conf_metrics: "{{root}}/ml_outputs/cal_test_cmetrics.csv"
       cal_curve: "{{root}}/ml_outputs/cal_test_plots/calibration_curve.png"
 
-  - source: scripts/analyze_test_proteins.py
+  - source: scripts/train_analyze_test_proteins.py
     name: analyze_test_proteins_cal
-    upstream: [cal_train]
+    upstream: [train_cal]
     product:
       nb: "{{root}}/htmls/analyze_test_proteins_cal.html"
       indiv_prot_csv: "{{root}}/ml_outputs/cal_test_by_protein.csv"
@@ -102,9 +102,9 @@ tasks:
         TagRemovePreprocessor:
           remove_cell_tags: [dictionary]
 
-  - source: scripts/analyze_misclassified.py
+  - source: scripts/train_analyze_misclassified.py
     name: analyze_misclassified
-    upstream: [cal_train]
+    upstream: [train_cal]
     product:
       nb: "{{root}}/htmls/analyze_cal_misclassified.html"
       data: "{{root}}/ml_outputs/cal_test_set_preds_detailed.csv"

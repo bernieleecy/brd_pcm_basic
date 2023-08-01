@@ -3,10 +3,6 @@ meta:
   source_loader:
     module: brd_pcm
 
-executor:
-  dotted_path: ploomber.executors.Serial
-  build_in_subprocess: false # do not run function tasks in a subprocess, as this causes joblib issues
-
 tasks:
   - source: brd_pcm.tasks.featurize.enter_from_fps
     product:

@@ -34,6 +34,7 @@ X_train_data = None
 y_train_data = None
 X_test_data = None
 y_test_data = None
+frac_to_screen = None
 
 # %%
 # load predicted data
@@ -143,16 +144,15 @@ log.info(len(pred_df))
 Still in the preliminary stages here!
 """
 # %%
-# take 0.5% of library to screen for now
-percent_to_screen = 0.5 * (1e-2)
-num_to_screen = int(len(pred_df) * percent_to_screen)
+num_to_screen = int(len(pred_df) * frac_to_screen)
 # and make sure it is an even number
 num_to_screen = num_to_screen + (num_to_screen % 2)
 max_each_class = num_to_screen // 2  # returns an integer
 log.info(f"Number of ligands to select: {num_to_screen}")
 
 # %%
-# Find all active ligands, select all of them if they comprise <0.25% of the library
+# Find all active ligands, select all of them if there are fewer than max_each_class of
+# them
 active_ids = []
 active_df = pred_df.query("`Predicted value` == 1")
 log.info(f"Number of predicted actives: {len(active_df)}")
@@ -196,9 +196,11 @@ for upper_limit in reversed(np.linspace(0.1, 0.5, 5)):
         n_to_keep = len(inactives_at_thres) - exceed_amount
         log.info(f"Number of inactives to keep: {n_to_keep}")
         # prioritise ligands closer to the decision boundary
-        inactives_at_thres = inactives_at_thres.sort_values(by="P (class 1)",
-                                                            ascending=False)
-        inactives_at_thres = inactives_at_thres.iloc[:n_to_keep, :]
+        inactives_at_thres = (
+            inactives_at_thres
+            .sort_values(by="P (class 1)", ascending=False)
+            .iloc[:n_to_keep, :]
+        )
         inactive_df = pd.concat([inactive_df, inactives_at_thres])
         inactive_ids.extend(inactives_at_thres["Running number"].values)
         break
@@ -212,8 +214,14 @@ log.info(f"Selected inactives: {inactive_ids}")
 log.info(f"Mean Tanimoto similarity: {inactive_df['Tanimoto Similarity'].mean():.3f}")
 
 # %%
+# combine the active and inactives and write to a file
+proposed_all_df = pd.concat([active_df, inactive_df])
+proposed_all_df = proposed_all_df.sort_values(by="P (class 1)", ascending=False)
+proposed_all_df.to_csv(product["proposed"], index=False)
+
+# %%
 # write actives and inactives to a file
-with open(product["proposed"], "w") as f:
+with open(product["summary"], "w") as f:
     f.write("# Proposed ligands for screening\n\n")
     f.write(f"Selected {len(active_ids)} active ligands\n")
     f.write("Active ligand IDs as a list:\n")

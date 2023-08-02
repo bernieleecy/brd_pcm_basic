@@ -46,9 +46,11 @@ tasks:
     upstream: [serve_process_fps]
     product:
       nb: "{{root}}/htmls/serve_select_fps.html"
-      proposed: "{{root}}/ml_outputs/proposed_screen.md"
+      proposed: "{{root}}/ml_outputs/proposed_screen.csv"
+      summary: "{{root}}/ml_outputs/proposed_screen.md"
     params:
       X_train_data: "products/train/data/X_train.parquet"
       y_train_data: "products/train/data/y_train.parquet"
       X_test_data: "products/train/data/X_test.parquet"
       y_test_data: "products/train/data/y_test.parquet"
+      frac_to_screen: "{{lib_frac}}"

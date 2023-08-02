@@ -2,13 +2,8 @@
 # This file is for flagging misclassified examples in test sets (calibrated preds only)
 
 # %%
-import pickle
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-from sklearn.preprocessing import MinMaxScaler
 
 from brd_pcm.utils.evaluate import find_similar_train_ligand
 
@@ -21,9 +16,6 @@ log.setLevel(logging.INFO)
 
 # set display and plotting preferences
 pd.options.display.float_format = "{:.3f}".format
-sns.set_style("ticks")
-plt.style.use("plotstyle.mplstyle")
-sns.set_palette("colorblind")
 
 # %% tags=["parameters"]
 upstream = None
@@ -53,7 +45,7 @@ pred_sim_df = pred_sim_df.drop(columns=["Test SMILES"])
 # flag misclassified examples in pred_sim_df
 pred_sim_df["Correct"] = pred_sim_df["Class"] == pred_sim_df["Predicted value"]
 
-# save df
+# save df, for use with streamlit
 pred_sim_df.to_csv(product["data"], index=False)
 
 # %%

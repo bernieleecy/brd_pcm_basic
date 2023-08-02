@@ -13,6 +13,7 @@ from sklearn.metrics import roc_auc_score, RocCurveDisplay
 from sklearn.metrics import PrecisionRecallDisplay
 from sklearn.calibration import CalibrationDisplay
 
+from importlib.resources import files
 from brd_pcm.utils.evaluate import get_pr_auc, get_key_cmetrics
 
 # logging
@@ -25,7 +26,8 @@ log.setLevel(logging.INFO)
 # set display and plotting preferences
 pd.options.display.float_format = "{:.3f}".format
 sns.set_style("ticks")
-plt.style.use("plotstyle.mplstyle")
+plotstyle = files("brd_pcm.resources").joinpath("plotstyle.mplstyle")
+plt.style.use(plotstyle)
 sns.set_palette("colorblind")
 
 # %% tags=["parameters"]

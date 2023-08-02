@@ -6,13 +6,8 @@
 # %%
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-from sklearn.metrics import classification_report
-
-from brd_pcm.utils.evaluate import get_key_cmetrics, find_similar_train_ligand_fps
+from brd_pcm.utils.evaluate import find_similar_train_ligand_fps
 
 # logging
 import logging
@@ -23,9 +18,6 @@ log.setLevel(logging.INFO)
 
 # set display and plotting preferences
 pd.options.display.float_format = "{:.3f}".format
-sns.set_style("ticks")
-plt.style.use("plotstyle.mplstyle")
-sns.set_palette("colorblind")
 
 # %% tags=["parameters"]
 upstream = None

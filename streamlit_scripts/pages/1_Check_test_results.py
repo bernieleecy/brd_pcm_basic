@@ -29,7 +29,8 @@ def smi2img(smi):
 
 # load in data for test set, hard coded during testing
 file = st.file_uploader(
-    "Upload a CSV file containing test set results here", type="csv", key="test_set"
+    "Upload a CSV file containing test set results here."\
+    " This file should end in _detailed.csv", type=".csv", key="test_set"
 )
 
 if file is not None:
@@ -117,9 +118,9 @@ if "df_test" in st.session_state:
         n_cols=3,
         tooltip=["Closest Train SMILES", "Tanimoto Similarity"],
         transform={
-            "Class": lambda x: f"True class: {x}",
-            "Predicted value": lambda x: f"Predicted class: {x}",
-            "P (class 1)": lambda x: f"P (class 1): {x:.3f}",
+            "Class": lambda x: f"True: Active" if x == 1 else f"True: Inactive",
+            "Predicted value": lambda x: f"Predicted: Active" if x == 1 else f"Predicted: Inactive",
+            "P (class 1)": lambda x: f"P (Active): {x:.3f}",
             "diff_p1_p0": lambda x: f"VA interval: {x:.3f}",
             "Tanimoto Similarity": lambda x: f"{x:.3f}",
         },
@@ -175,8 +176,9 @@ if "df_test" in st.session_state:
             # if misclassfied, print
             if not row["Correct"]:
                 col3.markdown(f":red[**MISCLASSIFIED!**]")
-            col3.write(f"True val: {row['Class']}")
-            col3.write(f"Predicted val: {row['Predicted value']} ({row['P (class 1)']:.3f})")
+            col3.write(f"True: Active" if row["Class"] == 1 else f"True: Inactive")
+            col3.write(f"Predicted: Active" if row["Predicted value"] == 1 else f"Predicted: Inactive")
+            col3.write(f"P (Active): {row['P (class 1)']:.3f}")
             col3.write(f"VA interval: {row['diff_p1_p0']:.3f}")
             col3.write(f"Closest train Tanimoto: {row['Tanimoto Similarity']:.3f}")
             col3.write(f"{class_protein}")

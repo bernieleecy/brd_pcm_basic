@@ -10,6 +10,11 @@
 *.html
 *.bz2
 
+# but include protein descriptors
+!src/brd_pcm/resources/*.csv
+!src/brd_pcm/resources/*/*.tsv
+!src/brd_pcm/resources/*/*.csv
+
 # do not include shell scripts used to run pipelines repeatedly
 run_ucla_lib.sh
 

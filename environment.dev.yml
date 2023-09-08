@@ -19,3 +19,4 @@ dependencies:
     - ploomber==0.22.4
     - streamlit==1.24.1
     - mols2grid==1.1.1
+    - nbstripout

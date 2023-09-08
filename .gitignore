@@ -9,6 +9,8 @@
 *.pkl
 *.html
 *.bz2
+*.xls
+*.xlsx
 
 # but include protein descriptors
 !src/brd_pcm/resources/*.csv

@@ -15,11 +15,11 @@ from imblearn.pipeline import Pipeline
 # custom functions
 from brd_pcm.utils.ml import ros_by_protein_class
 
-# fix random seed for reproducibility
-random_seed = 13579
-rng = np.random.RandomState(random_seed)
 
-def cross_val(upstream, product, type):
+def cross_val(upstream, product, type, random_seed):
+    # fix random seed for reproducibility
+    random_seed = int(random_seed)
+    rng = np.random.RandomState(random_seed)
 
     # Get the upstream name (assumes single upstream here)
     upstream_name = list(upstream)[0]

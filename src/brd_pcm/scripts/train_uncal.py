@@ -25,14 +25,16 @@ logging.basicConfig(format="%(message)s")
 log = logging.getLogger()
 log.setLevel(logging.INFO)
 
-# fix random seed for reproducibility
-random_seed = 13579
-rng = np.random.RandomState(random_seed)
-log.info(f"Random seed: {random_seed}")
-
 # %% tags=["parameters"]
 upstream = None
 product = None
+random_seed = None
+
+# %%
+# fix random seed for reproducibility
+random_seed = int(random_seed)
+rng = np.random.RandomState(random_seed)
+log.info(f"Random seed: {random_seed}")
 
 # %%
 # Get the upstream name (assumes single upstream here)

@@ -18,6 +18,8 @@ tasks:
       X_test: "{{root}}/data/X_test.parquet"
       y_test: "{{root}}/data/y_test.parquet"
       imblearn_pipe: "{{root}}/models/imblearn_pipe_template.pkl"
+    params:
+      random_seed: "{{random_seed}}"
 
   - source: brd_pcm.tasks.cross_val.cross_val
     name: stratified_cv
@@ -26,6 +28,7 @@ tasks:
       cross_val: "{{root}}/ml_outputs/cv_strat_split.csv"
     params:
       type: "stratified"
+      random_seed: "{{random_seed}}"
 
   - source: brd_pcm.tasks.cross_val.cross_val
     name: random_cv
@@ -34,6 +37,7 @@ tasks:
       cross_val: "{{root}}/ml_outputs/cv_random_split.csv"
     params:
       type: "random"
+      random_seed: "{{random_seed}}"
 
   - source: scripts/train_uncal.py
     upstream: [train_prep]

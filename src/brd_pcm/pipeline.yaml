@@ -47,6 +47,8 @@ tasks:
       predictions: "{{root}}/ml_outputs/uncal_test_set_preds.csv"
       lig_feat_names: "{{root}}/models/lig_feat_names.pkl"
       prot_feat_names: "{{root}}/models/prot_feat_names.pkl"
+    params:
+      random_seed: "{{random_seed}}"
 
   - source: scripts/train_cal.py
     upstream: [train_prep]
@@ -55,6 +57,8 @@ tasks:
       model: "{{root}}/models/cal_models"
       predictions: "{{root}}/ml_outputs/cal_test_set_preds.csv"
       cv_indices: "{{root}}/models/VA_cv_indices.pkl"
+    params:
+      random_seed: "{{random_seed}}"
 
   - source: scripts/train_analyze_test_set.py
     name: analyze_test_set_uncal

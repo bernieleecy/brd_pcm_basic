@@ -60,5 +60,9 @@ ploomber build --env-brd-data inputs/{{new_brd_data_file.csv}}
 
 # Notes on data
 
+The model training pipeline does some data cleaning (`clean.py` is a rewritten version of notebook 3 from the original data cleaning workflow).
+As a result, the input file is expected to have the following columns: `["SMILES", "Protein", "Class"]`, and `clean.py` will check for these files.
+Do not include Canon_SMILES as a column.
+
 During model training, the order of the input data is NOT changed during cleaning and featurization
 * Changing the order (e.g. reordering alphabetically by Protein name) can and will break the code

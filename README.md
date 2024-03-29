@@ -20,6 +20,8 @@ After installing the dependencies, the packaged pipeline **MUST** be installed w
 python -m pip install -e .
 ```
 
+The Venn-ABERS calibration used the fast Venn-ABERS implementation from https://github.com/ptocca/VennABERS 
+
 # Running pipelines
 
 The two main pipelines used in the thesis were:

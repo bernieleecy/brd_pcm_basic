@@ -20,7 +20,7 @@ After installing the dependencies, the packaged pipeline **MUST** be installed w
 python -m pip install -e .
 ```
 
-The Venn-ABERS calibration used the fast Venn-ABERS implementation from https://github.com/ptocca/VennABERS 
+The Venn-ABERS calibration used the fast Venn-ABERS implementation from https://github.com/ptocca/VennABERS and https://github.com/valeman/Multi-class-probabilistic-classification/tree/main 
 
 # Running pipelines
 
